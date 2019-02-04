@@ -1,5 +1,4 @@
 so ~/.vim/plugins.vim
-
 syntax enable
 set backspace=indent,eol,start                          "Make backspace behave like every other editor.
 let mapleader = ',' 				    		    	"The default is \, but a comma is much better.
@@ -18,6 +17,9 @@ set copyindent
 set ignorecase
 set smartcase
 set visualbell
+set shell=/bin/zsh
+nmap <Leader>t :terminal<cr>
+
 
 "-------------Visuals--------------"
 colorscheme night-owl
@@ -29,7 +31,7 @@ set guioptions-=l                                   "Disable Gui scrollbars.
 set guioptions-=L
 set guioptions-=r
 set guioptions-=R
-set nowrap                                        "Don't wrap lines.
+set nowrap                                          "Don't wrap lines.
 set tags=tags
 
 "Get rid of ugly split borders.
@@ -41,7 +43,7 @@ nmap sp :split<cr>
 
 
 "-------------Search--------------"
-set hlsearch			    					"Highlight all matched terms.
+set hlsearch			    				   	"Highlight all matched terms.
 set incsearch				    				"Incrementally highlight, as we type.
 
 "-------------Split Management--------------"
@@ -56,9 +58,8 @@ nmap <C-L> <C-W><C-L>
 
 "Resize vsplit.
 nmap <C-v> :vertical resize +5<cr>
+nmap 50 <c-w>=
 
-"Load the current buffer in Chrome
-nmap ,c :!open -a Google\ Chrome<cr>
 
 "Auto-remoe trailing spaces.
 autocmd BufWritePre *.php :%s/\s\+$//e
@@ -119,14 +120,6 @@ let NERDTReeHijackNetrw = 0
 set grepprg=ag								"We want to use Ag search
 
 let g:grep_cmd_opts = '--line-numbers --noheading'
-
-
-"/
-"/vim-php-cs-fixer.vim
-"/
-let g:php_cs_fixer_level = "psr2"                                       "Options: --level (default:symfony)
-let g:php_cs_fixer_config = "default"                                   "Default configuration path
-nnoremap <silent><leader>pf :call PhpCsFixerFixFile()<CR>
 
 
 "/
