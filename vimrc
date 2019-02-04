@@ -21,7 +21,7 @@ set visualbell
 
 "-------------Visuals--------------"
 colorscheme night-owl
-set guifont=Fira_Code_Retina:h16
+set guifont=Fira_Code_Retina:h16					"Macvim specific, move to gvimrc for linux.
 set guioptions-=T
 set t_CO=256						           		"Use 256 colors. This is useful for Terminal Vim.
 set linespace=15   						            "Macvim-specific line-height.
