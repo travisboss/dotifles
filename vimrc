@@ -21,7 +21,7 @@ set visualbell
 
 "-------------Visuals--------------"
 colorscheme night-owl
-set guifont=Fira_Code_Retina:h16					"Macvim specific, move to gvimrc for linux.
+set guifont=Fira_Code_Retina:h16
 set guioptions-=T
 set t_CO=256						           		"Use 256 colors. This is useful for Terminal Vim.
 set linespace=15   						            "Macvim-specific line-height.
@@ -85,7 +85,7 @@ nnoremap k gk
 nmap <Leader><space> :nohlsearch<cr>
 
 "Make NERDTree easier to toggle.
-nmap <C-x> :NERDTreeToggle<cr>
+nmap <C-b> :NERDTreeToggle<cr>
 
 nmap <C-p> :CtrlP<cr>
 nmap <C-R> :CtrlPBufTag<cr>
@@ -94,7 +94,11 @@ nmap <C-e> :CtrlPMRUFiles<cr>
 "Create/edit file in the current directory
 nmap :ed :edit %:p:h/
 
+"Open Bookmarked Projects in NERDTree
+nmap <Leader>nd :NERDTree 
 
+"Edit todo list for project.
+nmap ,todo :e todo.txt<cr>
 
 "-------------Plugins--------------"
 "/
@@ -124,6 +128,11 @@ let g:php_cs_fixer_level = "psr2"                                       "Options
 let g:php_cs_fixer_config = "default"                                   "Default configuration path
 nnoremap <silent><leader>pf :call PhpCsFixerFixFile()<CR>
 
+
+"/
+"/Vim-sync
+"/
+let g:sync_exe_filenames = '.sync;'
 
 "/
 "/Prettier
@@ -209,3 +218,4 @@ autocmd FileType php noremap <Leader>nf :call PhpExpandClass()<CR>
 
 "Sort PHP use statements
 vmap <Leader>Su ! awk '{ print length(), $0\| "sort -n \| cut -d\\ -f2-"extends}'<cr>
+
