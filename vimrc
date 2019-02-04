@@ -3,6 +3,7 @@ syntax enable
 set backspace=indent,eol,start                          "Make backspace behave like every other editor.
 let mapleader = ',' 				    		    	"The default is \, but a comma is much better.
 set number	                							"Let's activate line numbers.
+set relativenumber                                      "Turn on relative numbering
 set noerrorbells visualbell t_vb=   					"No damn bells!
 set autowriteall                        				"Automatically write the file when switching buffers.
 set complete=,w,b,u                     				"Set our desired autocomplete matching.
