@@ -1,4 +1,5 @@
 so ~/.vim/plugins.vim
+
 syntax enable
 set backspace=indent,eol,start                          "Make backspace behave like every other editor.
 let mapleader = ',' 				    		    	"The default is \, but a comma is much better.
@@ -24,16 +25,15 @@ nmap <Leader>t :terminal<cr>
 
 "-------------Visuals--------------"
 colorscheme night-owl
-set guifont=Fira_Code_Retina:h16
-set guioptions-=T
+set guioptions-=e
 set t_CO=256						           		"Use 256 colors. This is useful for Terminal Vim.
 set linespace=15   						            "Macvim-specific line-height.
 set guioptions-=l                                   "Disable Gui scrollbars.
 set guioptions-=L
 set guioptions-=r
 set guioptions-=R
-set nowrap                                          "Don't wrap lines.
 set tags=tags
+set wrap
 
 "Get rid of ugly split borders.
 hi vertsplit guifg=bg guibg=bg
@@ -114,7 +114,6 @@ let g:ctrlp_match_window = 'top,order:ttb,min:1,max:30,results:30'
 "/
 let NERDTReeHijackNetrw = 0
 
-
 "/
 "/Greplace.vim
 "/
@@ -122,15 +121,18 @@ set grepprg=ag								"We want to use Ag search
 
 let g:grep_cmd_opts = '--line-numbers --noheading'
 
+"/
+"/vim-airline
+"/
+let g:airline#extensions#tabline#enabled = 1       "vim-airline taking over tabs
+let g:airline_powerline_fonts = 1                  "Enable powerline fonts.
+let g:airline_highlighting_cache = 1               "Cache highlighting.
+let g:airline#extensions#tabline#enabled = 1       "Display buffers.
 
 "/
-"/Vim-sync
+"/vim-airline-themes
 "/
-let g:sync_exe_filenames = '.sync;'
-
-"/
-"/Prettier
-"/
+let g:airline_theme='deus'
 
 " max line length that prettier will wrap on
 " Prettier default: 80
