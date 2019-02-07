@@ -128,11 +128,13 @@ let g:airline#extensions#tabline#enabled = 1       "vim-airline taking over tabs
 let g:airline_powerline_fonts = 1                  "Enable powerline fonts.
 let g:airline_highlighting_cache = 1               "Cache highlighting.
 let g:airline#extensions#tabline#enabled = 1       "Display buffers.
+let g:airline_detect_paste=1                       "Detect paste.
+let g:airline#extensions#whitespace#enabled = 0    "Do not detect whitespace.
+let g:airline_section_y=''                         "Remove unicode information.
 
 "/
 "/vim-airline-themes
 "/
-let g:airline_theme='deus'
 
 " max line length that prettier will wrap on
 " Prettier default: 80
