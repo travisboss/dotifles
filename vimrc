@@ -112,7 +112,7 @@ let g:ctrlp_match_window = 'top,order:ttb,min:1,max:30,results:30'
 "/
 "/NERDTree
 "/
-let NERDTReeHijackNetrw = 0
+let NERDTreeHijackNetrw = 0
 
 "/
 "/Greplace.vim
