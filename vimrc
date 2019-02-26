@@ -89,6 +89,10 @@ nmap <Leader><space> :nohlsearch<cr>
 "Make NERDTree easier to toggle.
 nmap <C-b> :NERDTreeToggle<cr>
 
+"ctags :tag 
+nmap <Leader>f :tag<space>
+
+"CtrlP
 nmap <C-p> :CtrlP<cr>
 nmap <C-R> :CtrlPBufTag<cr>
 nmap <C-e> :CtrlPMRUFiles<cr>
@@ -104,9 +108,18 @@ nmap ,todo :e todo.txt<cr>
 
 "-------------Plugins--------------"
 "/
+"/ php-cs-fixer
+"/
+let g:php_cs_fixer_level = "psr2"                   " options: --level (default:symfony)
+nnoremap <silent><leader>pf :call PhpCsFixerFixFile()<CR>
+
+
+
+
+"/
 "/ CtrlP
 "/
-let g:ctrlp_custom_ignore = 'node_modules\|git'
+let g:ctrlp_custom_ignore = 'node_modules\DS_Stores\|git'
 let g:ctrlp_match_window = 'top,order:ttb,min:1,max:30,results:30'
 
 "/
@@ -118,19 +131,25 @@ let NERDTreeHijackNetrw = 0
 "/Greplace.vim
 "/
 set grepprg=ag								"We want to use Ag search
-
 let g:grep_cmd_opts = '--line-numbers --noheading'
 
 "/
 "/vim-airline
 "/
-let g:airline#extensions#tabline#enabled = 1       "vim-airline taking over tabs
-let g:airline_powerline_fonts = 1                  "Enable powerline fonts.
-let g:airline_highlighting_cache = 1               "Cache highlighting.
-let g:airline#extensions#tabline#enabled = 1       "Display buffers.
-let g:airline_detect_paste=1                       "Detect paste.
-let g:airline#extensions#whitespace#enabled = 0    "Do not detect whitespace.
-let g:airline_section_y=''                         "Remove unicode information.
+let g:airline_powerline_fonts = 1
+let g:airline_highlight_cache = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#show_splits = 0
+let g:airline#extensions#tabline#show_tabs = 1
+let g:airline#extensions#tabline#show_tab_nr = 0
+let g:airline#extensions#tabline#show_tab_type = 0
+let g:airline#extensions#tabline#close_symbol = '×'
+let g:airline_section_y=''
+let g:airline_section_c=''
+
+
+
 
 "/
 "/vim-airline-themes
@@ -190,7 +209,6 @@ let g:prettier#config#html_whitespace_sensitivity = 'css'
 "-------------Laravel-Specific--------------"
 nmap <Leader>lr :e app/Http/routes.php<cr>
 nmap <Leader>lm :!php artisan make:
-nmap <Leader><Leader>v :CtrlP<cr>resources/views/<cr>
 
 "-------------Auto-Commands--------------"
 "Automatically source the Vimrc file on save.
@@ -214,6 +232,21 @@ endfunction
 autocmd FileType php inoremap <Leader>nf <Esc>:call IPhpExpandClass()<CR>
 autocmd FileType php noremap <Leader>nf :call PhpExpandClass()<CR>
 
+"Vue syntax highlighting
+autocmd FileType vue syntax sync fromstart
+
+
 "Sort PHP use statements
 vmap <Leader>Su ! awk '{ print length(), $0\| "sort -n \| cut -d\\ -f2-"extends}'<cr>
 
+"-------------Tips and Reminders--------------"
+" - Press 'zz' to instantly center the line where the cursor is located.
+" - Press 'ctrl ]' to where the method was defined.
+" - Press 'ctrl ^' to previous edit location.
+" - Press 'ctrl d' to skip down a page.
+" - Press 'ctrl u' to skip up a page.
+" - Press 'cs <whatevertag> to change specific tag.
+" - Press 'ds <whatevertag> to delete specific tag. 
+" - Press 'dst' to delete the surrounding tag.
+" - Press 'cst' to change the surrounding tag.
+" - Press 'selected visually, press shift S to add tag to item.
