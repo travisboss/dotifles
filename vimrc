@@ -1,3 +1,5 @@
+set nocompatible
+
 so ~/.vim/plugins.vim
 
 syntax enable
