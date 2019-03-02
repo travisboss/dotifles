@@ -91,7 +91,7 @@ nmap <Leader><space> :nohlsearch<cr>
 "Make NERDTree easier to toggle.
 nmap <C-b> :NERDTreeToggle<cr>
 
-"ctags :tag 
+"ctags :tag
 nmap <Leader>f :tag<space>
 
 "CtrlP
@@ -103,7 +103,7 @@ nmap <C-e> :CtrlPMRUFiles<cr>
 nmap :ed :edit %:p:h/
 
 "Open Bookmarked Projects in NERDTree
-nmap <Leader>nd :NERDTree 
+nmap <Leader>nd :NERDTree<space>
 
 "Edit todo list for project.
 nmap ,todo :e todo.txt<cr>
@@ -112,9 +112,9 @@ nmap ,todo :e todo.txt<cr>
 "/
 "/ php-cs-fixer
 "/
-let g:php_cs_fixer_level = "psr2"                   " options: --level (default:symfony)
+let g:php_cs_fixer_level = "@PSR2"                   " options: --level (default:symfony)
 nnoremap <silent><leader>pf :call PhpCsFixerFixFile()<CR>
-
+autocmd BufWritePost *.php silent! call PhpCsFixerFixFile()
 
 
 
@@ -154,63 +154,9 @@ let g:airline_section_c=''
 
 
 "/
-"/vim-airline-themes
+"/vim-emmet
 "/
-
-" max line length that prettier will wrap on
-" Prettier default: 80
-let g:prettier#config#print_width = 80
-
-" number of spaces per indentation level
-" Prettier default: 2
-let g:prettier#config#tab_width = 2
-
-" use tabs over spaces
-" Prettier default: false
-let g:prettier#config#use_tabs = 'false'
-
-" print semicolons
-" Prettier default: true
-let g:prettier#config#semi = 'true'
-
-" single quotes over double quotes
-" Prettier default: false
-let g:prettier#config#single_quote = 'true'
-
-" print spaces between brackets
-" Prettier default: true
-let g:prettier#config#bracket_spacing = 'false'
-
-" put > on the last line instead of new line
-" Prettier default: false
-let g:prettier#config#jsx_bracket_same_line = 'true'
-
-" avoid|always
-" Prettier default: avoid
-let g:prettier#config#arrow_parens = 'always'
-
-" none|es5|all
-" Prettier default: none
-let g:prettier#config#trailing_comma = 'all'
-
-" flow|babylon|typescript|css|less|scss|json|graphql|markdown
-" Prettier default: babylon
-let g:prettier#config#parser = 'flow'
-
-" cli-override|file-override|prefer-file
-let g:prettier#config#config_precedence = 'prefer-file'
-
-" always|never|preserve
-let g:prettier#config#prose_wrap = 'preserve'
-
-" css|strict|ignore
-let g:prettier#config#html_whitespace_sensitivity = 'css'
-
-
-
-"-------------Laravel-Specific--------------"
-nmap <Leader>lr :e app/Http/routes.php<cr>
-nmap <Leader>lm :!php artisan make:
+let g:user_emmet_leader_key='<C-Z>'
 
 "-------------Auto-Commands--------------"
 "Automatically source the Vimrc file on save.
@@ -224,6 +170,7 @@ function! IPhpInsertUse()
     call PhpInsertUse()
     call feedkeys('a',  'n')
 endfunction
+
 autocmd FileType php inoremap <Leader>n <Esc>:call IPhpInsertUse()<CR>
 autocmd FileType php noremap <Leader>u :call PhpInsertUse()<CR>
 
@@ -248,7 +195,7 @@ vmap <Leader>Su ! awk '{ print length(), $0\| "sort -n \| cut -d\\ -f2-"extends}
 " - Press 'ctrl d' to skip down a page.
 " - Press 'ctrl u' to skip up a page.
 " - Press 'cs <whatevertag> to change specific tag.
-" - Press 'ds <whatevertag> to delete specific tag. 
+" - Press 'ds <whatevertag> to delete specific tag.
 " - Press 'dst' to delete the surrounding tag.
 " - Press 'cst' to change the surrounding tag.
 " - Press 'selected visually, press shift S to add tag to item.
