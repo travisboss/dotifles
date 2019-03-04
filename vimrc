@@ -1,192 +1,199 @@
-set nocompatible
-
-so ~/.vim/plugins.vim
-
+filetype indent on
+if (has("termguicolors"))
+ set termguicolors
+endif
 syntax enable
-set backspace=indent,eol,start                          "Make backspace behave like every other editor.
-let mapleader = ',' 				    		    	"The default is \, but a comma is much better.
-set number	                							"Let's activate line numbers.
-set relativenumber                                      "Turn on relative numbering
-set noerrorbells visualbell t_vb=   					"No damn bells!
-set autowriteall                        				"Automatically write the file when switching buffers.
-set complete=,w,b,u                     				"Set our desired autocomplete matching.
+colorscheme night-owl
+set number
+set relativenumber
+let mapleader=","
+set shortmess+=A
+set laststatus=0
+set noshowmode
+set hidden
+set history=500
+set nowrap
+set nobackup
 set tabstop=4
-set smarttab
 set expandtab
 set softtabstop=4
 set shiftwidth=4
-set shiftround
-set autoindent
-set copyindent
+set backspace=2
+set encoding=utf-8
+set wildmenu
 set ignorecase
-set smartcase
-set visualbell
-set shell=/bin/zsh
-nmap <Leader>t :terminal<cr>
+set splitbelow
+set splitright
+set expandtab
+set autoread
+set timeout ttimeout timeoutlen=200
+set smartindent
+set scrolloff=5
+set autoindent
+set autowriteall
+set hlsearch
+set showmatch
+set noerrorbells visualbell t_vb=
+set rtp+=/usr/local/opt/fzf
 
+"map <leader>p :FZF<CR>
+"map <C-p> :FZF<CR>
+nnoremap <leader>p :FilesMru --tiebreak=index<cr>
+map <C-p> :FilesMru --tiebreak=index<CR>
 
-"-------------Visuals--------------"
-colorscheme night-owl
-set guioptions-=e
-set t_CO=256						           		"Use 256 colors. This is useful for Terminal Vim.
-set linespace=15   						            "Macvim-specific line-height.
-set guioptions-=l                                   "Disable Gui scrollbars.
-set guioptions-=L
-set guioptions-=r
-set guioptions-=R
-set tags=tags
-set wrap
+map <leader>s :source $MYVIMRC<CR>
+map <leader>ev :e $MYVIMRC<CR>
 
-"Get rid of ugly split borders.
-hi vertsplit guifg=bg guibg=bg
+autocmd BufWritePre * :%s/\s\+$//e
+nnoremap <silent> <Esc> :nohlsearch<Bar>:echo<CR>
 
-"Open splits
-nmap vs :vsplit<cr>
-nmap sp :split<cr>
+map <D-A-RIGHT> <C-w>l
+map <D-A-LEFT> <C-w>h
+map <D-A-DOWN> <C-w><C-w>
+map <D-A-UP> <C-w>W
 
+nnoremap <silent><leader>f :call PhpCsFixerFixFile()<CR>
+" Default fzf layout
+" - down / up / left / right
+let g:fzf_layout = { 'left': '~40%' }
 
-"-------------Search--------------"
-set hlsearch			    				   	"Highlight all matched terms.
-set incsearch				    				"Incrementally highlight, as we type.
+let $FZF_DEFAULT_COMMAND = 'ag --skip-vcs-ignores -g ""'
 
-"-------------Split Management--------------"
-set splitbelow 					    			"Make splits default to below...
-set splitright						    		"And to the right. This feels more natural.
+let g:fzf_filemru_bufwrite = 1
+let g:fzf_filemru_git_ls = 1
+let g:fzf_filemru_ignore_submodule = 1
 
-"We'll set simpler mappings to switch between splits.
-nmap <C-J> <C-W><C-J>
-nmap <C-K> <C-W><C-K>
-nmap <C-H> <C-W><C-H>
-nmap <C-L> <C-W><C-L>
+"This runs the full PHPUnit suite.
+nnoremap ,t :!phpunit<cr>
 
-"Resize vsplit.
-nmap <C-v> :vertical resize +5<cr>
-nmap 50 <c-w>=
+"This runs the test method under the cursor.
+nmap ,tm ?function
 
+nmap <leader>e :MRU<CR>
 
-"Auto-remoe trailing spaces.
-autocmd BufWritePre *.php :%s/\s\+$//e
+nmap <leader>w :bd<CR>
 
-"-------------Mappings--------------"
-"Make it easy to edit the Vimrc file.
-nmap <Leader>ev :tabedit $MYVIMRC<cr>
-nmap <Leader>es :e ~/.vim/snippets/
+nmap ;w :w<CR>
 
-"Fast saves.
-nmap <leader>w :w!<cr>
+nmap <C-]> g<C-]>
 
-"Easy escaping to normal model
-imap jj <esc>
+imap jj <Esc>
 
-"Auto change directory to match current file, cd.
-nnoremap ,cd :cd %:p:h<CR>:pwd<CR>
+" Enable completion where available.
+" This setting must be set before ALE is loaded.
+let g:ale_completion_enabled = 1
+let g:ale_lint_on_text_changed = 'never'
 
-"Down is really the next line.
-nnoremap j gj
-nnoremap k gk
+" Error and warning signs.
+let g:ale_sign_error = '⤫'
+let g:ale_sign_warning = '⚠'
 
-"Add simple highlight removal.
-nmap <Leader><space> :nohlsearch<cr>
+" Change echo message format
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
-"Make NERDTree easier to toggle.
-nmap <C-b> :NERDTreeToggle<cr>
+" Set cs_fixer for php files, use linter for vue files.
+let g:ale_fixers = {'php': ['php_cs_fixer']}
+let g:ale_linter_aliases = {
+\   'vue': ['vue', 'javascript'],
+\   'jsx': ['css', 'javascript']
+\}
 
-"ctags :tag
-nmap <Leader>f :tag<space>
+let g:ale_linters = {
+\   'vue': ['eslint', 'vls'],
+\   'javascript': ['eslint'],
+\   'jsx': ['stylelint', 'eslint']
+\}
+" Do not lint or fix minified files.
+let g:ale_pattern_options = {
+\ '\.min\.js$': {'ale_linters': [], 'ale_fixers': []},
+\ '\.min\.css$': {'ale_linters': [], 'ale_fixers': []},
+\}
 
-"CtrlP
-nmap <C-p> :CtrlP<cr>
-nmap <C-R> :CtrlPBufTag<cr>
-nmap <C-e> :CtrlPMRUFiles<cr>
-
-"Create/edit file in the current directory
-nmap :ed :edit %:p:h/
-
-"Open Bookmarked Projects in NERDTree
-nmap <Leader>nd :NERDTree<space>
-
-"Edit todo list for project.
-nmap ,todo :e todo.txt<cr>
-
-"-------------Plugins--------------"
-"/
-"/ php-cs-fixer
-"/
-let g:php_cs_fixer_level = "@PSR2"                   " options: --level (default:symfony)
-nnoremap <silent><leader>pf :call PhpCsFixerFixFile()<CR>
-autocmd BufWritePost *.php silent! call PhpCsFixerFixFile()
+" Set this variable to 1 to fix files when you save them.
+let g:ale_fix_on_save = 1
 
 
 
-"/
-"/ CtrlP
-"/
-let g:ctrlp_custom_ignore = 'node_modules\DS_Stores\|git'
-let g:ctrlp_match_window = 'top,order:ttb,min:1,max:30,results:30'
+let g:lightline = {}
 
-"/
-"/NERDTree
-"/
-let NERDTreeHijackNetrw = 0
+let g:lightline.component_expand = {
+      \  'linter_checking': 'lightline#ale#checking',
+      \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \  'linter_ok': 'lightline#ale#ok',
+      \ }
 
-"/
-"/Greplace.vim
-"/
-set grepprg=ag								"We want to use Ag search
-let g:grep_cmd_opts = '--line-numbers --noheading'
+let g:lightline.component_type = {
+      \     'linter_checking': 'left',
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \     'linter_ok': 'left',
+      \ }
 
-"/
-"/vim-airline
-"/
-let g:airline_powerline_fonts = 1
-let g:airline_highlight_cache = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#show_buffers = 0
-let g:airline#extensions#tabline#show_splits = 0
-let g:airline#extensions#tabline#show_tabs = 1
-let g:airline#extensions#tabline#show_tab_nr = 0
-let g:airline#extensions#tabline#show_tab_type = 0
-let g:airline#extensions#tabline#close_symbol = '×'
-let g:airline_section_y=''
-let g:airline_section_c=''
+let g:lightline.active = { 'right': [[ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ]] }
 
 
-
-
-"/
-"/vim-emmet
-"/
-let g:user_emmet_leader_key='<C-Z>'
-
-"-------------Auto-Commands--------------"
-"Automatically source the Vimrc file on save.
-
-augroup autosourcing
-	autocmd!
-	autocmd BufWritePost .vimrc source %
-augroup END
 
 function! IPhpInsertUse()
     call PhpInsertUse()
     call feedkeys('a',  'n')
 endfunction
-
-autocmd FileType php inoremap <Leader>n <Esc>:call IPhpInsertUse()<CR>
+autocmd FileType php inoremap <Leader>u <Esc>:call IPhpInsertUse()<CR>
 autocmd FileType php noremap <Leader>u :call PhpInsertUse()<CR>
+
 
 function! IPhpExpandClass()
     call PhpExpandClass()
     call feedkeys('a', 'n')
 endfunction
-autocmd FileType php inoremap <Leader>nf <Esc>:call IPhpExpandClass()<CR>
-autocmd FileType php noremap <Leader>nf :call PhpExpandClass()<CR>
+autocmd FileType php inoremap <Leader>q <Esc>:call IPhpExpandClass()<CR>
+autocmd FileType php noremap <Leader>q :call PhpExpandClass()<CR>
 
-"Vue syntax highlighting
-autocmd FileType vue syntax sync fromstart
+imap <C-J> <Plug>snipMateNextOrTrigger
+smap <C-J> <Plug>snipMateNextOrTrigger
+let g:UltiSnipsSnippetsDir="~/.config/nvim/snippets/"
+
+let g:indent_guides_default_mapping = 0
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_start_level = 2
+let g:indent_guides_exclude_filetypes = ['help', 'startify', 'man', 'rogue']
+
+call plug#begin()
+Plug 'tpope/vim-sensible'
+Plug 'itchyny/lightline.vim'
+Plug 'tpope/vim-vinegar'
+Plug 'StanAngeloff/php.vim'
+Plug 'stephpy/vim-php-cs-fixer'
+Plug 'yegappan/mru'
+Plug 'w0rp/ale'
+Plug 'arnaud-lb/vim-php-namespace'
+Plug 'tpope/vim-commentary'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'tweekmonster/fzf-filemru'
+Plug 'haishanh/night-owl.vim'
+Plug 'maximbaz/lightline-ale'
+Plug 'SirVer/ultisnips'
+
+"Snipmate dependencies
+Plug 'garbas/vim-snipmate'
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'tomtom/tlib_vim'
+Plug 'nathanaelkane/vim-indent-guides'
+call plug#end()
 
 
-"Sort PHP use statements
-vmap <Leader>Su ! awk '{ print length(), $0\| "sort -n \| cut -d\\ -f2-"extends}'<cr>
+"Tips
+" If there are Syntastic errors on the page, do :Errors to read the list.
+" ltag methodName and then lopen to view all symbols.
+
+"regenerate tags with
+" ctags -R --PHP-kinds=cfi --regex-php="/^[ \t]*trait[ \t]+([a-z0_9_]+)/\1/t,traits/i"
+" gc will comment out the selection.
+
+
 
 "-------------Tips and Reminders--------------"
 " - Press 'zz' to instantly center the line where the cursor is located.
