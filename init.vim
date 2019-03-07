@@ -1,15 +1,40 @@
-syntax enable
+" Vim Plug
+ call plug#begin('~/.config/nvim/plugged')
+ Plug 'neomake/neomake'
+ Plug 'sheerun/vim-polyglot'
+ Plug '/usr/local/opt/fzf'
+ Plug 'junegunn/fzf.vim'
+ Plug 'tpope/vim-vinegar'
+ Plug 'gioele/vim-autoswap'
+ Plug 'haishanh/night-owl.vim'
+ Plug 'garbas/vim-snipmate'
+ Plug 'MarcWeber/vim-addon-mw-utils'
+ Plug 'tomtom/tlib_vim'
+ Plug 'tpope/vim-surround'
+ Plug 'phpactor/phpactor' ,  {'do': 'composer install', 'for': 'php'}
+ Plug 'ncm2/ncm2'
+ Plug 'roxma/nvim-yarp'
+ Plug 'phpactor/ncm2-phpactor'
+ Plug 'ervandew/supertab'
+ Plug 'mattn/emmet-vim'
+ Plug 'tpope/vim-fugitive'
+ Plug 'tpope/vim-repeat'
+ Plug 'vim-airline/vim-airline'
+ Plug 'vim-airline/vim-airline-themes'
+ call plug#end()
+
 set backspace=indent,eol,start  "Make backspace behave like every other editor.
 let mapleader = ','     "The default is \, but a comma is much better.
 set showmatch           " Show matching brackets.
 set number              " Show the line numbers on the left side.
+set relativenumber
 set formatoptions+=o    " Continue comment marker in new lines.
 set expandtab           " Insert spaces when TAB is pressed.
 set tabstop=4           " Render TABs using this many spaces.
 set shiftwidth=4        " Indentation amount for < and > commands.
 set autowriteall        " Auto write the file when switching buffers.
 set complete=.,w,b,u    " Set our desired autocompletion matching.
-
+set grepprg=rg\ --vimgrep
 set nojoinspaces        " Prevents inserting two spaces after punctuation on a join (J)
 
 " More natural splits
@@ -53,9 +78,9 @@ nnoremap  <silent>   <tab>  :if &modifiable && !&readonly && &modified <CR> :wri
 nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
 
 "-------------Visuals--------------"
-if (has("termguicolors"))
- set termguicolors
-endif
+set termguicolors
+syntax enable
+set background=dark
 colorscheme night-owl
 set tags=tags
 set wrap
@@ -92,8 +117,8 @@ autocmd BufWritePre *.php :%s/\s\+$//e
 
 "-------------Mappings--------------"
 "Make it easy to edit the Vimrc file.
-nmap <Leader>ev :tabedit $VIMRC<cr>
-nmap <Leader>es :e ~/.vim/snippets/
+nmap <Leader>ev :e $MYVIMRC<cr>
+nmap <Leader>es :e ~/.config/nvim/snippets/
 
 "Fast saves.
 nmap <leader>w :w!<cr>
@@ -117,7 +142,104 @@ nmap :ed :edit %:p:h/
 "Edit todo list for project.
 nmap ,todo :e todo.txt<cr>
 
+
+
+
+
+"/
+"/FZF
+"/
+nnoremap <leader>p :Files<cr>
+nnoremap <leader>1 :Files ~/Sites/<cr>
+nnoremap <leader>2 :Files ~/Code/<cr>
+nnoremap <leader>b :Buffers<cr>
+nnoremap <leader>f :Rg<cr>
+
+
+" Default fzf layout
+" - down / up / left / right
+let g:fzf_layout = { 'left': '~25%' }
+
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+
+" [Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R'
+
+
+
+
+
 "-------------Plugins--------------"
+"/
+"/ phpactor
+"/
+"Completion
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+set ofu=syntaxcomplete#Complete
+autocmd FileType php setlocal omnifunc=phpactor#Complete
+let g:phpactorOmniError = v:true
+autocmd BufEnter * call ncm2#enable_for_buffer()
+set completeopt=noinsert,menuone,noselect
+" PHPActor config
+" Include use statement
+nmap <Leader>u :call phpactor#UseAdd()<CR>
+
+" Invoke the context menu
+nmap <Leader>mm :call phpactor#ContextMenu()<CR>
+
+" Invoke the navigation menu
+nmap <Leader>nn :call phpactor#Navigate()<CR>
+
+" Goto definition of class or class member under the cursor
+nmap <Leader>o :call phpactor#GotoDefinition()<CR>
+
+" Transform the classes in the current file
+nmap <Leader>tt :call phpactor#Transform()<CR>
+
+" Generate a new class (replacing the current file)
+nmap <Leader>cc :call phpactor#ClassNew()<CR>
+
+" Extract expression (normal mode)
+nmap <silent><Leader>ee :call phpactor#ExtractExpression(v:false)<CR>
+
+" Extract expression from selection
+vmap <silent><Leader>ee :<C-U>call phpactor#ExtractExpression(v:true)<CR>
+
+" Extract method from selection
+vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
+
+
+
+
+
+
+"/
+"/ neomake
+"/
+" Neomake config
+" Full config: when writing or reading a buffer, and on changes in insert and
+" normal mode (after 1s; no delay when writing).
+call neomake#configure#automake('nrwi', 500)
+
+
+
 "/
 "/ php-namespace
 "/
@@ -127,40 +249,6 @@ function! IPhpInsertUse()
 endfunction
 autocmd FileType php inoremap <Leader>n <Esc>:call IPhpInsertUse()<CR>
 autocmd FileType php noremap <Leader>n :call PhpInsertUse()<CR>
-
-
-
-
-"/
-"/ fzf
-"/
-" Remap Files search
-nnoremap <leader>p :Files<cr>
-nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>t :Tags<cr>
-" Default fzf layout
-" - down / up / left / right
-let g:fzf_layout = { 'up': '~40%' }
-" [Tags] Command to generate tags file
-let g:fzf_tags_command = 'ctags -R'
-" [Buffers] Jump to the existing window if possible
-let g:fzf_buffers_jump = 1
-" Augmenting Ag command using fzf#vim#with_preview function
-"   * fzf#vim#with_preview([[options], [preview window], [toggle keys...]])
-"     * For syntax-highlighting, Ruby and any of the following tools are required:
-"       - Bat: https://github.com/sharkdp/bat
-"       - Highlight: http://www.andre-simon.de/doku/highlight/en/highlight.php
-"       - CodeRay: http://coderay.rubychan.de/
-"       - Rouge: https://github.com/jneen/rouge
-"
-"   :Ag  - Start fzf with hidden preview window that can be enabled with "?" key
-"   :Ag! - Start fzf in fullscreen and display the preview window above
-command! -bang -nargs=* Ag
-  \ call fzf#vim#ag(<q-args>,
-  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \                 <bang>0)
-
 
 
 
@@ -207,33 +295,6 @@ autocmd BufRead,BufNewFile *.vue setfiletype html
 
 " Auto fix on save php-cs-fixer
 autocmd BufWritePost *.php silent! call PhpCsFixerFixFile()
-
-
-
-
-" Vim Plug
-call plug#begin('~/.vim/plugged')
- Plug 'VundleVim/Vundle.vim'
- Plug 'tpope/vim-vinegar'
- Plug 'stephpy/vim-php-cs-fixer'
- Plug 'gioele/vim-autoswap'
- Plug 'haishanh/night-owl.vim'
- Plug 'garbas/vim-snipmate'
- Plug 'MarcWeber/vim-addon-mw-utils'
- Plug 'tomtom/tlib_vim'
- Plug 'tpope/vim-surround'
- Plug 'StanAngeloff/php.vim'
- Plug 'arnaud-lb/vim-php-namespace'
- Plug 'ervandew/supertab'
- Plug '/usr/local/opt/fzf'
- Plug 'junegunn/fzf.vim'
- Plug 'pbogut/fzf-mru.vim'
- Plug 'mattn/emmet-vim'
- Plug 'tpope/vim-fugitive'
- Plug 'tpope/vim-repeat'
- Plug 'vim-airline/vim-airline'
- Plug 'vim-airline/vim-airline-themes'
- call plug#end()
 
 
  " Notes and other stuff
