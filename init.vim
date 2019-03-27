@@ -1,27 +1,31 @@
 " Vim Plug
- call plug#begin('~/.config/nvim/plugged')
- Plug 'neomake/neomake'
+call plug#begin('~/.config/nvim/plugged')
+ Plug 'w0rp/ale'
  Plug 'sheerun/vim-polyglot'
  Plug '/usr/local/opt/fzf'
  Plug 'junegunn/fzf.vim'
  Plug 'tpope/vim-vinegar'
  Plug 'gioele/vim-autoswap'
- Plug 'haishanh/night-owl.vim'
+ Plug 'morhetz/gruvbox'
  Plug 'garbas/vim-snipmate'
  Plug 'MarcWeber/vim-addon-mw-utils'
  Plug 'tomtom/tlib_vim'
  Plug 'tpope/vim-surround'
- Plug 'phpactor/phpactor' ,  {'do': 'composer install', 'for': 'php'}
- Plug 'ncm2/ncm2'
- Plug 'roxma/nvim-yarp'
- Plug 'phpactor/ncm2-phpactor'
  Plug 'ervandew/supertab'
  Plug 'mattn/emmet-vim'
  Plug 'tpope/vim-fugitive'
  Plug 'tpope/vim-repeat'
  Plug 'vim-airline/vim-airline'
  Plug 'vim-airline/vim-airline-themes'
+ Plug 'mhinz/vim-startify'
+ Plug 'ludovicchabant/vim-gutentags'
+ Plug 'posva/vim-vue'
  call plug#end()
+
+
+
+
+
 
 set backspace=indent,eol,start  "Make backspace behave like every other editor.
 let mapleader = ','     "The default is \, but a comma is much better.
@@ -65,23 +69,25 @@ set ignorecase          " Make searching case insensitive
 set smartcase           " ... unless the query has capital letters.
 set gdefault            " Use 'g' flag by default with :s/foo/bar/.
 
-" Use <C-L> to clear the highlighting of :set hlsearch.
-if maparg('<C-L>', 'n') ==# ''
-  nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
-endif
-
-" Search and Replace
-nmap <Leader>s :%s//g<Left><Left>
 " Change from : to ;
 nnoremap ; :
+
+" Move between buffers with tab and shift-tab
 nnoremap  <silent>   <tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bnext<CR>
 nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
+
+
+
+
+
+
 
 "-------------Visuals--------------"
 set termguicolors
 syntax enable
 set background=dark
-colorscheme night-owl
+colorscheme gruvbox
+let g:gruvbox_contrast = 'dark'
 set tags=tags
 set wrap
 
@@ -106,11 +112,6 @@ nmap <C-J> <C-W><C-J>
 nmap <C-K> <C-W><C-K>
 nmap <C-H> <C-W><C-H>
 nmap <C-L> <C-W><C-L>
-
-"Resize vsplit.
-nmap <C-v> :vertical resize +5<cr>
-nmap 50 <c-w>=
-
 
 "Auto-remoe trailing spaces.
 autocmd BufWritePre *.php :%s/\s\+$//e
@@ -188,67 +189,37 @@ let g:fzf_tags_command = 'ctags -R'
 
 "-------------Plugins--------------"
 "/
-"/ phpactor
+"/ ALE
 "/
-"Completion
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-set ofu=syntaxcomplete#Complete
-autocmd FileType php setlocal omnifunc=phpactor#Complete
-let g:phpactorOmniError = v:true
-autocmd BufEnter * call ncm2#enable_for_buffer()
-set completeopt=noinsert,menuone,noselect
-" PHPActor config
-" Include use statement
-nmap <Leader>u :call phpactor#UseAdd()<CR>
-
-" Invoke the context menu
-nmap <Leader>mm :call phpactor#ContextMenu()<CR>
-
-" Invoke the navigation menu
-nmap <Leader>nn :call phpactor#Navigate()<CR>
-
-" Goto definition of class or class member under the cursor
-nmap <Leader>o :call phpactor#GotoDefinition()<CR>
-
-" Transform the classes in the current file
-nmap <Leader>tt :call phpactor#Transform()<CR>
-
-" Generate a new class (replacing the current file)
-nmap <Leader>cc :call phpactor#ClassNew()<CR>
-
-" Extract expression (normal mode)
-nmap <silent><Leader>ee :call phpactor#ExtractExpression(v:false)<CR>
-
-" Extract expression from selection
-vmap <silent><Leader>ee :<C-U>call phpactor#ExtractExpression(v:true)<CR>
-
-" Extract method from selection
-vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
-
+" Disable linting while typing
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 0
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_open_list = 1
+let g:ale_keep_list_window_open=0
+let g:ale_set_quickfix=0
+let g:ale_list_window_size = 5
+let g:ale_php_phpcbf_standard='PSR2'
+let g:ale_fixers = {'javascript': ['eslint', 'remove_trailing_lines', 'trim_whitespace'], 'css': ['prettier'], 'php': ['phpcbf','php_cs_fixer']}
+" Set this variable to 1 to fix files when you save them.
+let g:ale_fix_on_save = 1
+let g:ale_linters_explicit = 1
+let g:ale_linters = {'php': ['php',' phpcs'], 'javascript': ['eslint']}
+let g:ale_linter_aliases = {'jsx': ['css', 'javascript'],}
+" Do not lint or fix minified files.
+let g:ale_pattern_options = {
+\ '\.min\.js$': {'ale_linters': [], 'ale_fixers': []},
+\ '\.min\.css$': {'ale_linters': [], 'ale_fixers': []},
+\}
 
 
 
 
 
 "/
-"/ neomake
+"/gutentags
 "/
-" Neomake config
-" Full config: when writing or reading a buffer, and on changes in insert and
-" normal mode (after 1s; no delay when writing).
-call neomake#configure#automake('nrwi', 500)
-
-
-
-"/
-"/ php-namespace
-"/
-function! IPhpInsertUse()
-    call PhpInsertUse()
-    call feedkeys('a',  'n')
-endfunction
-autocmd FileType php inoremap <Leader>n <Esc>:call IPhpInsertUse()<CR>
-autocmd FileType php noremap <Leader>n :call PhpInsertUse()<CR>
+let g:gutentags_cache_dir = '~/.config/nvim/tags'
 
 
 
@@ -269,14 +240,12 @@ let g:airline_right_alt_sep = '|'
 let g:airline_section_y=''                         "Remove unicode information.
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#ale#enabled = 1
 
 
 
 
-"/
-"/ php-cs-fixer
-"/
-let g:php_cs_fixer_rules = "@PSR2"
+
 
 
 "-------------Auto-Commands--------------"
@@ -291,11 +260,12 @@ augroup END
 vmap <Leader>Su ! awk '{ print length(), $0\| "sort -n \| cut -d\\ -f2-"extends}'<cr>
 
 " Change syntax highlighting to html for vue files
-autocmd BufRead,BufNewFile *.vue setfiletype html
+" autocmd BufRead,BufNewFile *.vue setfiletype html
 
-" Auto fix on save php-cs-fixer
-autocmd BufWritePost *.php silent! call PhpCsFixerFixFile()
 
+"Apply coding standards with phpcsfixer
+command! -nargs=1 Silent execute ':silent !'.<q-args> | execute ':redraw!'
+map <c-s> <esc>:w<cr>:Silent php-cs-fixer fix %:p --level=PSR2<cr>
 
  " Notes and other stuff
  " If I hit % inside of Vinegar I can create a new file
