@@ -1,27 +1,39 @@
 " Vim Plug
 call plug#begin('~/.config/nvim/plugged')
- Plug 'w0rp/ale'
- Plug 'sheerun/vim-polyglot'
+" FZF
  Plug '/usr/local/opt/fzf'
  Plug 'junegunn/fzf.vim'
- Plug 'tpope/vim-vinegar'
- Plug 'gioele/vim-autoswap'
- Plug 'morhetz/gruvbox'
- Plug 'garbas/vim-snipmate'
- Plug 'MarcWeber/vim-addon-mw-utils'
- Plug 'tomtom/tlib_vim'
- Plug 'tpope/vim-surround'
+ " vim-rooter
+ Plug 'airblade/vim-rooter'
+ " supertab
  Plug 'ervandew/supertab'
+ " snipmate
+ Plug 'MarcWeber/vim-addon-mw-utils'
+ Plug 'garbas/vim-snipmate'
+ " autoswap
+ Plug 'gioele/vim-autoswap'
+ " emmet
  Plug 'mattn/emmet-vim'
+ " startify
+ Plug 'mhinz/vim-startify'
+ " theme
+ Plug 'morhetz/gruvbox'
+ " tpope suite
+ Plug 'tpope/vim-vinegar'
+ Plug 'tpope/vim-surround'
  Plug 'tpope/vim-fugitive'
  Plug 'tpope/vim-repeat'
+ " vue
+ Plug 'posva/vim-vue'
+ " polyglot
+ Plug 'sheerun/vim-polyglot'
+ " airline
  Plug 'vim-airline/vim-airline'
  Plug 'vim-airline/vim-airline-themes'
- Plug 'mhinz/vim-startify'
- Plug 'ludovicchabant/vim-gutentags'
- Plug 'posva/vim-vue'
- call plug#end()
-
+ " ale
+ Plug 'w0rp/ale'
+ Plug 'tomtom/tlib_vim'
+call plug#end()
 
 
 
@@ -88,7 +100,6 @@ syntax enable
 set background=dark
 colorscheme gruvbox
 let g:gruvbox_contrast = 'dark'
-set tags=tags
 set wrap
 
 "Get rid of ugly split borders.
@@ -122,13 +133,13 @@ nmap <Leader>ev :e $MYVIMRC<cr>
 nmap <Leader>es :e ~/.config/nvim/snippets/
 
 "Fast saves.
-nmap <leader>w :w!<cr>
+nmap <leader>ww :w<cr>
 
-"Easy escaping to normal model
+"Fast saves and quits
+nmap <leader>qq :wq<cr>
+
+"Easy escaping to normal mode
 imap jj <esc>
-
-"Auto change directory to match current file, cd.
-nnoremap ,cd :cd %:p:h<CR>:pwd<CR>
 
 "Down is really the next line.
 nnoremap j gj
@@ -150,7 +161,7 @@ nmap ,todo :e todo.txt<cr>
 "/
 "/FZF
 "/
-nnoremap <leader>p :Files<cr>
+nnoremap // :Files<cr>
 nnoremap <leader>1 :Files ~/Sites/<cr>
 nnoremap <leader>2 :Files ~/Code/<cr>
 nnoremap <leader>b :Buffers<cr>
@@ -159,7 +170,7 @@ nnoremap <leader>f :Rg<cr>
 
 " Default fzf layout
 " - down / up / left / right
-let g:fzf_layout = { 'left': '~25%' }
+let g:fzf_layout = { 'down': '~35%' }
 
 " Customize fzf colors to match your color scheme
 let g:fzf_colors =
@@ -217,14 +228,6 @@ let g:ale_pattern_options = {
 
 
 "/
-"/gutentags
-"/
-let g:gutentags_cache_dir = '~/.config/nvim/tags'
-
-
-
-
-"/
 "/vim-airline
 "/
 let g:airline#extensions#tabline#enabled = 2
@@ -241,6 +244,12 @@ let g:airline_section_y=''                         "Remove unicode information.
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#ale#enabled = 1
+
+
+"/
+"/ Rooter
+"/
+let g:rooter_change_directory_for_non_project_files = 'current'
 
 
 
