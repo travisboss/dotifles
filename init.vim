@@ -3,16 +3,12 @@ call plug#begin('~/.config/nvim/plugged')
 " FZF
  Plug '/usr/local/opt/fzf'
  Plug 'junegunn/fzf.vim'
- " vim-rooter
- Plug 'airblade/vim-rooter'
  " supertab
  Plug 'ervandew/supertab'
- " snipmate
- Plug 'MarcWeber/vim-addon-mw-utils'
- Plug 'garbas/vim-snipmate'
  " autoswap
  Plug 'gioele/vim-autoswap'
  " emmet
+ Plug 'mattn/webapi-vim'
  Plug 'mattn/emmet-vim'
  " startify
  Plug 'mhinz/vim-startify'
@@ -30,9 +26,6 @@ call plug#begin('~/.config/nvim/plugged')
  " airline
  Plug 'vim-airline/vim-airline'
  Plug 'vim-airline/vim-airline-themes'
- " ale
- Plug 'w0rp/ale'
- Plug 'tomtom/tlib_vim'
 call plug#end()
 
 
@@ -161,16 +154,15 @@ nmap ,todo :e todo.txt<cr>
 "/
 "/FZF
 "/
-nnoremap // :Files<cr>
-nnoremap <leader>1 :Files ~/Sites/<cr>
-nnoremap <leader>2 :Files ~/Code/<cr>
+nnoremap // :Files ~/<cr>
+nnoremap <leader>1 :Files ~/Code/<cr>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>f :Rg<cr>
 
 
 " Default fzf layout
 " - down / up / left / right
-let g:fzf_layout = { 'down': '~35%' }
+let g:fzf_layout = { 'down': '~40%' }
 
 " Customize fzf colors to match your color scheme
 let g:fzf_colors =
@@ -194,39 +186,29 @@ let g:fzf_buffers_jump = 1
 " [Tags] Command to generate tags file
 let g:fzf_tags_command = 'ctags -R'
 
+" Enable per-command history.
+" CTRL-N and CTRL-P will be automatically bound to next-history and
+" previous-history instead of down and up. If you don't like the change,
+" explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
+let g:fzf_history_dir = '~/.local/share/fzf-history'
 
+" Global line completion (not just open buffers. ripgrep required.)
+inoremap <expr> <c-x><c-l> fzf#vim#complete(fzf#wrap({
+  \ 'prefix': '^.*$',
+  \ 'source': 'rg -n ^ --color always',
+  \ 'options': '--ansi --delimiter : --nth 3..',
+  \ 'reducer': { lines -> join(split(lines[0], ':\zs')[2:], '') }}))
 
+"fzf#vim#grep. To use ripgrep instead of ag:
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
 
 
 "-------------Plugins--------------"
-"/
-"/ ALE
-"/
-" Disable linting while typing
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 0
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_open_list = 1
-let g:ale_keep_list_window_open=0
-let g:ale_set_quickfix=0
-let g:ale_list_window_size = 5
-let g:ale_php_phpcbf_standard='PSR2'
-let g:ale_fixers = {'javascript': ['eslint', 'remove_trailing_lines', 'trim_whitespace'], 'css': ['prettier'], 'php': ['phpcbf','php_cs_fixer']}
-" Set this variable to 1 to fix files when you save them.
-let g:ale_fix_on_save = 1
-let g:ale_linters_explicit = 1
-let g:ale_linters = {'php': ['php',' phpcs'], 'javascript': ['eslint']}
-let g:ale_linter_aliases = {'jsx': ['css', 'javascript'],}
-" Do not lint or fix minified files.
-let g:ale_pattern_options = {
-\ '\.min\.js$': {'ale_linters': [], 'ale_fixers': []},
-\ '\.min\.css$': {'ale_linters': [], 'ale_fixers': []},
-\}
-
-
-
-
-
 "/
 "/vim-airline
 "/
@@ -246,12 +228,16 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#ale#enabled = 1
 
 
-"/
-"/ Rooter
-"/
-let g:rooter_change_directory_for_non_project_files = 'current'
 
-
+"/
+"/ Emmet
+"/
+" remap default <C-Y leader
+let g:user_emmet_leader_key='<C-Z>'
+" Enable just for html/css
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
+let g:user_emmet_settings = webapi#json#decode(join(readfile(expand('~/.config/nvim/snippets/snippets.json')), "\n"))
 
 
 
