@@ -134,10 +134,10 @@ nmap <Leader>ev :e $MYVIMRC<cr>
 nmap <Leader>es :e ~/.config/nvim/snippets/
 
 "Fast saves.
-nmap <leader>ww :w<cr>
+nmap <leader>ww :w!<cr>
 
 "Fast saves and quits
-nmap <leader>qq :wq<cr>
+nmap <leader>qq :wq!<cr>
 
 "Easy escaping to normal mode
 imap jj <esc>
@@ -148,9 +148,6 @@ nnoremap k gk
 
 "Add simple highlight removal.
 nmap <Leader><space> :nohlsearch<cr>
-
-"Create/edit file in the current directory
-nmap :ed :edit %:p:h/
 
 "Edit todo list for project.
 nmap ,todo :e todo.txt<cr>
@@ -177,6 +174,18 @@ let NERDTreQuitOnOpen = 1
 let NERDTreeAutoDeleteBuffer = 1
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
 
 
 
