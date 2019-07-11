@@ -1,8 +1,5 @@
 " Vim Plug
 call plug#begin('~/.config/nvim/plugged')
-" FZF
- Plug '/usr/local/opt/fzf'
- Plug 'junegunn/fzf.vim'
  " supertab
  Plug 'ervandew/supertab'
  " autoswap
@@ -21,11 +18,12 @@ call plug#begin('~/.config/nvim/plugged')
  Plug 'tpope/vim-repeat'
  " vue
  Plug 'posva/vim-vue'
- " polyglot
- Plug 'sheerun/vim-polyglot'
  " airline
  Plug 'vim-airline/vim-airline'
  Plug 'vim-airline/vim-airline-themes'
+ " nerdtree
+ Plug 'scrooloose/nerdtree'
+ Plug 'Xuyuanp/nerdtree-git-plugin'
 call plug#end()
 
 
@@ -67,7 +65,7 @@ endif
 set list                " Show problematic characters.
 
 " Also highlight all tabs and trailing whitespace characters.
-highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
+highlight ExtraWhitespace ctermbg=white guibg=darkgreen
 match ExtraWhitespace /\s\+$\|\t/
 
 set ignorecase          " Make searching case insensitive
@@ -89,11 +87,13 @@ nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :wri
 
 "-------------Visuals--------------"
 set termguicolors
-syntax enable
+syntax on
 set background=dark
 colorscheme gruvbox
 let g:gruvbox_contrast = 'dark'
 set wrap
+" do not display the current mode
+set noshowmode
 
 "Get rid of ugly split borders.
 hi vertsplit guifg=bg guibg=bg
@@ -101,6 +101,14 @@ hi vertsplit guifg=bg guibg=bg
 "Open splits
 nmap vs :vsplit<cr>
 nmap sp :split<cr>
+
+" Enables filetype detection, filetype-specific scripts (ftplugins),
+" and filetype-specific indent scripts.
+filetype plugin indent on
+
+
+
+
 
 
 "-------------Search--------------"
@@ -151,64 +159,28 @@ nmap ,todo :e todo.txt<cr>
 
 
 
-"/
-"/FZF
-"/
-nnoremap // :Files ~/<cr>
-nnoremap <leader>1 :Files ~/Code/<cr>
-nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>f :Rg<cr>
-
-
-" Default fzf layout
-" - down / up / left / right
-let g:fzf_layout = { 'down': '~40%' }
-
-" Customize fzf colors to match your color scheme
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
-
-" [Buffers] Jump to the existing window if possible
-let g:fzf_buffers_jump = 1
-
-" [Tags] Command to generate tags file
-let g:fzf_tags_command = 'ctags -R'
-
-" Enable per-command history.
-" CTRL-N and CTRL-P will be automatically bound to next-history and
-" previous-history instead of down and up. If you don't like the change,
-" explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
-let g:fzf_history_dir = '~/.local/share/fzf-history'
-
-" Global line completion (not just open buffers. ripgrep required.)
-inoremap <expr> <c-x><c-l> fzf#vim#complete(fzf#wrap({
-  \ 'prefix': '^.*$',
-  \ 'source': 'rg -n ^ --color always',
-  \ 'options': '--ansi --delimiter : --nth 3..',
-  \ 'reducer': { lines -> join(split(lines[0], ':\zs')[2:], '') }}))
-
-"fzf#vim#grep. To use ripgrep instead of ag:
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-  \   <bang>0 ? fzf#vim#with_preview('up:60%')
-  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-  \   <bang>0)
-
-
 "-------------Plugins--------------"
+" sneak
+let g:sneak#label = 1
+
+
+
+
+
+"/
+"/ nerdtree
+"/
+let NERDTreeHijackNetrw = 1
+nnoremap <leader>p :NERDTreeToggle<CR>
+nnoremap <silent> <leader>v :NERDTreeFind<CR>
+let NERDTreQuitOnOpen = 1
+let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
+
+
+
+
 "/
 "/vim-airline
 "/
@@ -232,8 +204,8 @@ let g:airline#extensions#ale#enabled = 1
 "/
 "/ Emmet
 "/
-" remap default <C-Y leader
-let g:user_emmet_leader_key='<C-Z>'
+" remap default <C-Y> leader
+let g:user_emmet_leader_key='<C-z>,'
 " Enable just for html/css
 let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
@@ -247,9 +219,12 @@ let g:user_emmet_settings = webapi#json#decode(join(readfile(expand('~/.config/n
 "Automatically source the Vimrc file on save.
 
 augroup autosourcing
-	autocmd!
-	autocmd BufWritePost .config/nvim/init.vim source %
+    autocmd!
+    autocmd BufWritePost .config/nvim/init.vim source %
 augroup END
+
+" Automatically change the current directory
+autocmd BufEnter * silent! lcd %:p:h
 
 "Sort PHP use statements
 vmap <Leader>Su ! awk '{ print length(), $0\| "sort -n \| cut -d\\ -f2-"extends}'<cr>
@@ -266,3 +241,4 @@ map <c-s> <esc>:w<cr>:Silent php-cs-fixer fix %:p --level=PSR2<cr>
  " If I hit % inside of Vinegar I can create a new file
  " If I hit d I can create a new directory.
  " If I hit D I can delete the directory or file.
+ " Emmet key is Control Z comma
