@@ -143,7 +143,7 @@ nmap <leader>ww :w!<cr>
 nmap <leader>qq :wq!<cr>
 
 "Easy escaping to normal mode
-imap jj <esc>
+imap kj <esc>
 
 "Down is really the next line.
 nnoremap j gj
