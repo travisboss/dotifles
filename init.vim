@@ -1,7 +1,5 @@
 " Vim Plug
 call plug#begin('~/.config/nvim/plugged')
- " supertab
- Plug 'ervandew/supertab'
  " autoswap
  Plug 'gioele/vim-autoswap'
  " emmet
@@ -16,16 +14,21 @@ call plug#begin('~/.config/nvim/plugged')
  Plug 'tpope/vim-surround'
  Plug 'tpope/vim-fugitive'
  Plug 'tpope/vim-repeat'
+ Plug 'tpope/vim-dispatch'
  " vue
  Plug 'posva/vim-vue'
+ " rust
+ Plug 'rust-lang/rust.vim'
  " airline
  Plug 'vim-airline/vim-airline'
  Plug 'vim-airline/vim-airline-themes'
  " nerdtree
  Plug 'scrooloose/nerdtree'
  Plug 'Xuyuanp/nerdtree-git-plugin'
+ Plug 'ryanoasis/vim-devicons'
+ " ale
+ Plug 'w0rp/ale'
 call plug#end()
-
 
 
 
@@ -87,7 +90,7 @@ nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :wri
 
 "-------------Visuals--------------"
 set termguicolors
-syntax on
+syntax enable
 set background=dark
 colorscheme gruvbox
 let g:gruvbox_contrast = 'dark'
@@ -152,15 +155,38 @@ nmap <Leader><space> :nohlsearch<cr>
 "Edit todo list for project.
 nmap ,todo :e todo.txt<cr>
 
+nmap <leader>t :ter<cr>
+
 
 
 
 
 "-------------Plugins--------------"
-" sneak
-let g:sneak#label = 1
-
-
+"/
+"/ ale
+"/
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 1
+let g:ale_fix_on_save = 1
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '--'
+highlight ALEWarning ctermbg=DarkMagenta
+let g:ale_linters_explicit = 1
+let g:ale_linters = {
+    \ 'javascript': ['eslint'],
+    \ 'rust': ['rustc']
+    \ }
+let g:ale_fixers = {
+    \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+    \ 'angular': ['prettier'],
+    \ 'css': ['prettier'],
+    \ 'html': ['prettier'],
+    \ 'javascript': ['prettier', 'eslint'],
+    \ 'jsx': ['prettier'],
+    \ 'php': ['php_cs_fixer', 'prettier'],
+    \ 'scss': ['prettier'],
+    \ 'vue': ['prettier']
+    \ }
 
 
 
@@ -173,7 +199,8 @@ nnoremap <silent> <leader>v :NERDTreeFind<CR>
 let NERDTreQuitOnOpen = 1
 let NERDTreeAutoDeleteBuffer = 1
 let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
+let NERDTreeDirArrowExpandable = "\u00a0"
+let NERDTreeDirArrowCollapsible = "\u00a0"
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified"  : "✹",
     \ "Staged"    : "✚",
@@ -203,12 +230,12 @@ let g:airline_left_sep = ' '
 let g:airline_left_alt_sep = '|'
 let g:airline_right_sep = ' '
 let g:airline_right_alt_sep = '|'
-let g:airline_section_y=''                         "Remove unicode information.
+let g:airline_section_x = ''                         "Remove filetype
+let g:airline_section_y = ''                         "Remove unicode
+let g:airline_section_z = ''                         "Remove current position
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#ale#enabled = 1
-
-
 
 "/
 "/ Emmet
@@ -245,6 +272,7 @@ vmap <Leader>Su ! awk '{ print length(), $0\| "sort -n \| cut -d\\ -f2-"extends}
 "Apply coding standards with phpcsfixer
 command! -nargs=1 Silent execute ':silent !'.<q-args> | execute ':redraw!'
 map <c-s> <esc>:w<cr>:Silent php-cs-fixer fix %:p --level=PSR2<cr>
+
 
  " Notes and other stuff
  " If I hit % inside of Vinegar I can create a new file
