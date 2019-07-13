@@ -15,10 +15,9 @@ call plug#begin('~/.config/nvim/plugged')
  Plug 'tpope/vim-fugitive'
  Plug 'tpope/vim-repeat'
  Plug 'tpope/vim-dispatch'
+ Plug 'tpope/vim-commentary'
  " vue
  Plug 'posva/vim-vue'
- " rust
- Plug 'rust-lang/rust.vim'
  " airline
  Plug 'vim-airline/vim-airline'
  Plug 'vim-airline/vim-airline-themes'
@@ -26,8 +25,14 @@ call plug#begin('~/.config/nvim/plugged')
  Plug 'scrooloose/nerdtree'
  Plug 'Xuyuanp/nerdtree-git-plugin'
  Plug 'ryanoasis/vim-devicons'
+ " nerdtreecommenter
+ Plug 'scrooloose/nerdcommenter'
  " ale
  Plug 'w0rp/ale'
+ " vim-css-color
+ Plug 'ap/vim-css-color'
+" git commit browser
+Plug 'junegunn/gv.vim', { 'on': 'GV'}
 call plug#end()
 
 
@@ -36,7 +41,7 @@ call plug#end()
 set backspace=indent,eol,start  "Make backspace behave like every other editor.
 let mapleader = ','     "The default is \, but a comma is much better.
 set showmatch           " Show matching brackets.
-set number              " Show the line numbers on the left side.
+set number relativenumber  " Show the line numbers on the left side.
 set relativenumber
 set formatoptions+=o    " Continue comment marker in new lines.
 set expandtab           " Insert spaces when TAB is pressed.
@@ -89,11 +94,13 @@ nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :wri
 
 
 "-------------Visuals--------------"
-set termguicolors
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 syntax enable
 set background=dark
 colorscheme gruvbox
+let g:gruvbox_italic = 1
 let g:gruvbox_contrast = 'dark'
+let g:gruvbox_contrast_dark = 2
 set wrap
 " do not display the current mode
 set noshowmode
@@ -155,8 +162,14 @@ nmap <Leader><space> :nohlsearch<cr>
 "Edit todo list for project.
 nmap ,todo :e todo.txt<cr>
 
+" open terminal window
 nmap <leader>t :ter<cr>
 
+" remove mapping of up down left right keys
+nmap <Up> <Nop>
+nmap <Down> <Nop>
+nmap <Left> <Nop>
+nmap <Right> <Nop>
 
 
 
@@ -165,25 +178,30 @@ nmap <leader>t :ter<cr>
 "/
 "/ ale
 "/
+nmap <leader>f :ALEFix<cr>
+nmap <leader>l :ALELint<cr>
 let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 1
-let g:ale_fix_on_save = 1
-let g:ale_sign_error = '>>'
-let g:ale_sign_warning = '--'
-highlight ALEWarning ctermbg=DarkMagenta
+" let g:ale_lint_on_enter = 1
+let g:ale_fix_on_save = 0
+let g:ale_sign_error = '💔'
+let g:ale_sign_warning = '💡'
 let g:ale_linters_explicit = 1
 let g:ale_linters = {
+    \ 'css': ['stylelint'],
+    \ 'html': ['stylelint'],
     \ 'javascript': ['eslint'],
-    \ 'rust': ['rustc']
+    \ 'php': ['phpcs'],
+    \ 'rust': ['cargo']
     \ }
 let g:ale_fixers = {
     \ '*': ['remove_trailing_lines', 'trim_whitespace'],
     \ 'angular': ['prettier'],
     \ 'css': ['prettier'],
     \ 'html': ['prettier'],
-    \ 'javascript': ['prettier', 'eslint'],
+    \ 'javascript': ['prettier_eslint'],
     \ 'jsx': ['prettier'],
     \ 'php': ['php_cs_fixer', 'prettier'],
+    \ 'rust': ['rustfmt'],
     \ 'scss': ['prettier'],
     \ 'vue': ['prettier']
     \ }
@@ -216,6 +234,26 @@ let g:NERDTreeIndicatorMapCustom = {
 
 
 
+"/
+"/ nerdtreecommenter
+"/
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+
+" Use compact syntax for prettified multi-line comments
+let g:NERDCompactSexyComs = 1
+
+" Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDDefaultAlign = 'left'
+" Set a language to use its alternate delimiters by default
+let g:NERDAltDelims_java = 1
+" Enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
+
+
+
+
+
 
 "/
 "/vim-airline
@@ -231,8 +269,6 @@ let g:airline_left_alt_sep = '|'
 let g:airline_right_sep = ' '
 let g:airline_right_alt_sep = '|'
 let g:airline_section_x = ''                         "Remove filetype
-let g:airline_section_y = ''                         "Remove unicode
-let g:airline_section_z = ''                         "Remove current position
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#ale#enabled = 1
@@ -279,3 +315,11 @@ map <c-s> <esc>:w<cr>:Silent php-cs-fixer fix %:p --level=PSR2<cr>
  " If I hit d I can create a new directory.
  " If I hit D I can delete the directory or file.
  " Emmet key is Control Z comma
+ " gcc to commnet out a line
+ " gcap to comment out a paragraph
+ " cs"' to replace " with '
+ " cs'<q> to change ' to <q></q>
+ " to remove ds"
+ " change a word ysiw<em>
+ " comment out current line <leader>cc
+ " comment out but yank line first <leader>cy
