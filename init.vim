@@ -15,7 +15,6 @@ call plug#begin('~/.config/nvim/plugged')
  Plug 'tpope/vim-fugitive'
  Plug 'tpope/vim-repeat'
  Plug 'tpope/vim-dispatch'
- Plug 'tpope/vim-commentary'
  " vue
  Plug 'posva/vim-vue'
  " airline
@@ -25,17 +24,27 @@ call plug#begin('~/.config/nvim/plugged')
  Plug 'scrooloose/nerdtree'
  Plug 'Xuyuanp/nerdtree-git-plugin'
  Plug 'ryanoasis/vim-devicons'
+ Plug 'scrooloose/nerdcommenter'
  " ale
  Plug 'w0rp/ale'
- " vim-css-color
+ " vim-color
  Plug 'ap/vim-css-color'
+ Plug 'shmargum/vim-sass-colors'
 " git commit browser
 Plug 'junegunn/gv.vim', { 'on': 'GV'}
+" typescript
+Plug 'leafgarland/typescript-vim'
+" deoplete
+Plug 'Shougo/deoplete.nvim'
+" supertab
+Plug 'ervandew/supertab'
+
 call plug#end()
 
 
 
-
+set path+=.,**
+set clipboard^=unnamedplus
 set backspace=indent,eol,start  "Make backspace behave like every other editor.
 let mapleader = ','     "The default is \, but a comma is much better.
 set showmatch           " Show matching brackets.
@@ -90,15 +99,14 @@ nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :wri
 
 
 
-
 "-------------Visuals--------------"
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-syntax enable
+filetype plugin indent on
+syntax on
 set background=dark
 colorscheme gruvbox
 let g:gruvbox_italic = 1
 let g:gruvbox_contrast = 'dark'
-let g:gruvbox_contrast_dark = 2
 set wrap
 " do not display the current mode
 set noshowmode
@@ -109,11 +117,6 @@ hi vertsplit guifg=bg guibg=bg
 "Open splits
 nmap vs :vsplit<cr>
 nmap sp :split<cr>
-
-" Enables filetype detection, filetype-specific scripts (ftplugins),
-" and filetype-specific indent scripts.
-filetype plugin indent on
-
 
 
 
@@ -169,6 +172,21 @@ nmap <Down> <Nop>
 nmap <Left> <Nop>
 nmap <Right> <Nop>
 
+" Some fixes for common typos have saved me a surprising amount of time
+command WQ wq
+command Wq wq
+command WA wa
+command Wa wa
+command W w
+command Q q
+command Qa qa
+command QA qa
+command Bd bd
+
+
+" Sort styles tags
+nmap <leader>sv vi{ <bar> :sort<cr>
+
 
 
 
@@ -178,6 +196,8 @@ nmap <Right> <Nop>
 "/
 nmap <leader>f :ALEFix<cr>
 nmap <leader>l :ALELint<cr>
+nmap <leader>wf :w <bar> :ALEFix<cr>
+nmap <leader>wlf :w <bar> :ALELint <bar> :ALEFix<cr>
 let g:ale_lint_on_text_changed = 'never'
 " let g:ale_lint_on_enter = 1
 let g:ale_fix_on_save = 0
@@ -185,8 +205,6 @@ let g:ale_sign_error = '💔'
 let g:ale_sign_warning = '💡'
 let g:ale_linters_explicit = 1
 let g:ale_linters = {
-    \ 'css': ['stylelint'],
-    \ 'html': ['stylelint'],
     \ 'javascript': ['eslint'],
     \ 'php': ['phpcs'],
     \ 'rust': ['cargo']
@@ -196,13 +214,28 @@ let g:ale_fixers = {
     \ 'angular': ['prettier'],
     \ 'css': ['prettier'],
     \ 'html': ['prettier'],
-    \ 'javascript': ['prettier_eslint'],
+    \ 'javascript': ['eslint'],
     \ 'jsx': ['prettier'],
-    \ 'php': ['php_cs_fixer', 'prettier'],
     \ 'rust': ['rustfmt'],
-    \ 'scss': ['prettier'],
-    \ 'vue': ['prettier']
+    \ 'scss': ['prettier']
     \ }
+
+
+
+
+
+"/
+"/ deoplete
+"/
+let g:deoplete#enable_at_startup = 1
+
+
+
+
+"/
+"/ typescript-vim
+"/
+let g:typescript_indent_disable = 1
 
 
 
@@ -212,7 +245,9 @@ let g:ale_fixers = {
 let NERDTreeHijackNetrw = 1
 nnoremap <leader>p :NERDTreeToggle<CR>
 nnoremap <silent> <leader>v :NERDTreeFind<CR>
-let NERDTreQuitOnOpen = 1
+let g:NERDTreeWinPos = "right"
+let g:NERDTreeWinSize = 25
+let NERDTreeQuitOnOpen = 1
 let NERDTreeAutoDeleteBuffer = 1
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrowExpandable = "\u00a0"
@@ -230,6 +265,14 @@ let g:NERDTreeIndicatorMapCustom = {
     \ "Unknown"   : "?"
     \ }
 
+" Use compact syntax for prettified multi-line comments
+let g:NERDCompactSexyComs = 1
+" Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDDefaultAlign = 'left'
+" Set a language to use its alternate delimiters by default
+let g:NERDAltDelims_java = 1
+" Enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
 
 
 "/
@@ -253,8 +296,6 @@ let g:airline#extensions#ale#enabled = 1
 "/
 "/ Emmet
 "/
-" remap default <C-Y> leader
-let g:user_emmet_leader_key='<C-z>,'
 " Enable just for html/css
 let g:user_emmet_install_global = 0
 autocmd FileType html,css EmmetInstall
@@ -279,7 +320,7 @@ autocmd BufEnter * silent! lcd %:p:h
 vmap <Leader>Su ! awk '{ print length(), $0\| "sort -n \| cut -d\\ -f2-"extends}'<cr>
 
 " Change syntax highlighting to html for vue files
-" autocmd BufRead,BufNewFile *.vue setfiletype html
+autocmd BufRead,BufNewFile *.vue setfiletype html
 
 
 "Apply coding standards with phpcsfixer
@@ -298,3 +339,4 @@ map <c-s> <esc>:w<cr>:Silent php-cs-fixer fix %:p --level=PSR2<cr>
  " cs'<q> to change ' to <q></q>
  " to remove ds"
  " change a word ysiw<em>
+
