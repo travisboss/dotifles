@@ -2,12 +2,10 @@
 call plug#begin('~/.config/nvim/plugged')
  "airline
  Plug 'vim-airline/vim-airline'
- "ale
- Plug 'w0rp/ale'
  "autoswap
  Plug 'gioele/vim-autoswap'
-"deoplete
-Plug 'Shougo/deoplete.nvim'
+ " COC
+ Plug 'neoclide/coc.nvim', {'branch': 'release'}
  "nerdtree
  Plug 'scrooloose/nerdtree'
  Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -16,7 +14,7 @@ Plug 'Shougo/deoplete.nvim'
  "startify
  Plug 'mhinz/vim-startify'
 "supertab
-Plug 'ervandew/supertab'
+ Plug 'ervandew/supertab'
  "theme
  Plug 'morhetz/gruvbox'
  "tpope suite
@@ -174,45 +172,11 @@ nmap <leader>sv vi{ <bar> :sort<cr>
 
 "-------------Plugins--------------"
 "/
-"/ ale
+"/ coc
 "/
-nmap <leader>f :ALEFix<cr>
-nmap <leader>wf :w <bar> :ALEFix<cr>
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_save = 1
-let g:ale_fix_on_save = 0
-let g:ale_sign_error = '💔'
-let g:ale_sign_warning = '💡'
-let g:ale_linters_explicit = 1
-let g:ale_linters = {
-    \ 'javascript': ['eslint'],
-    \ 'jsx': ['eslint'],
-    \ 'php': ['phpcs'],
-    \ 'rust': ['cargo'],
-    \ 'typescript': ['tslint'],
-    \ 'vue': ['eslint']
-    \ }
-let g:ale_fixers = {
-    \ '*': ['remove_trailing_lines', 'trim_whitespace'],
-    \ 'html': ['prettier'],
-    \ 'javascript': ['eslint'],
-    \ 'jsx': ['eslint'],
-    \ 'rust': ['rustfmt'],
-    \ 'scss': ['prettier'],
-    \ 'typescript': ['tslint'],
-    \ 'vue': ['eslint']
-    \ }
-
-
-
-"/
-"/ deoplete
-"/
-let g:deoplete#enable_at_startup = 1
-" Use ALE as completion sources for all code.
-call deoplete#custom#option('sources', {
-\ '_': ['ale'],
-\})
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+nmap <leader>f :Prettier<cr>
+let g:airline#extensions#coc#enabled = 1
 
 
 
@@ -249,13 +213,13 @@ let g:NERDTreeIndicatorMapCustom = {
     \ 'Ignored'   : '☒',
     \ "Unknown"   : "?"
     \ }
-" Use compact syntax for prettified multi-line comments
+"Use compact syntax for prettified multi-line comments
 let g:NERDCompactSexyComs = 1
-" Align line-wise comment delimiters flush left instead of following code indentation
+"Align line-wise comment delimiters flush left instead of following code indentation
 let g:NERDDefaultAlign = 'left'
-" Set a language to use its alternate delimiters by default
+"Set a language to use its alternate delimiters by default
 let g:NERDAltDelims_java = 1
-" Enable trimming of trailing whitespace when uncommenting
+"Enable trimming of trailing whitespace when uncommenting
 let g:NERDTrimTrailingWhitespace = 1
 
 
@@ -277,8 +241,7 @@ let g:airline_right_alt_sep = '|'
 let g:airline_section_x = ''                         "Remove filetype
 let g:airline_section_y = ''                         "Remove unicode
 let g:airline#extensions#tabline#enabled = 1
-"let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline#extensions#ale#enabled = 1
+
 
 
 
@@ -293,8 +256,6 @@ augroup END
 autocmd BufEnter * silent! lcd %:p:h
 "Sort PHP use statements
 vmap <Leader>Su ! awk '{ print length(), $0\| "sort -n \| cut -d\\ -f2-"extends}'<cr>
-" Change syntax highlighting to html for vue files
-autocmd BufRead,BufNewFile *.vue setfiletype html
 "Auto create skeleton files
 autocmd BufNewFile * silent! 0r $HOME/.config/nvim/skeletons/%:e.tpl
 
@@ -311,4 +272,3 @@ autocmd BufNewFile * silent! 0r $HOME/.config/nvim/skeletons/%:e.tpl
  " cs'<q> to change ' to <q></q>
  " to remove ds"
  " change a word ysiw<em>
-
