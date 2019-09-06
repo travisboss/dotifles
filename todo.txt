@@ -1,3 +1,0 @@
-1. Clean and organize init.vim file
-2. Setup git plugin
-3. Use neovim and daily workflo
