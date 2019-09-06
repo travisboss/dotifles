@@ -1,53 +1,132 @@
-" Vim Plug
+"Vim Plug
 call plug#begin('~/.config/nvim/plugged')
- "airline
- Plug 'vim-airline/vim-airline'
- "autoswap
- Plug 'gioele/vim-autoswap'
- " COC
- Plug 'neoclide/coc.nvim', {'branch': 'release'}
- "nerdtree
- Plug 'scrooloose/nerdtree'
- Plug 'Xuyuanp/nerdtree-git-plugin'
- Plug 'ryanoasis/vim-devicons'
- Plug 'scrooloose/nerdcommenter'
- "startify
- Plug 'mhinz/vim-startify'
-"supertab
- Plug 'ervandew/supertab'
- "theme
- Plug 'morhetz/gruvbox'
- "tpope suite
- Plug 'tpope/vim-vinegar'
- Plug 'tpope/vim-surround'
- Plug 'tpope/vim-fugitive'
- Plug 'tpope/vim-repeat'
- "typescript
- Plug 'leafgarland/typescript-vim'
- "vim-color
- Plug 'ap/vim-css-color'
- Plug 'shmargum/vim-sass-colors'
- "vue
- Plug 'posva/vim-vue'
-
+   "auto close
+   Plug 'alvan/vim-closetag'
+   "blamer
+   Plug 'APZelos/blamer.nvim'
+   "coc.nvim
+   Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
+   "dervish
+   Plug 'justinmk/vim-dirvish'
+   "editorconfig
+   Plug 'editorconfig/editorconfig-vim'
+   "fzy
+   Plug 'travisboss/neovim-fuzzy'
+   "lightline
+   Plug 'itchyny/lightline.vim'
+   Plug 'mengelbrecht/lightline-bufferline'
+   "nerdtree
+   Plug 'scrooloose/nerdtree'
+   Plug 'scrooloose/nerdcommenter'
+   "sneak
+   Plug 'justinmk/vim-sneak'
+   "startify
+   Plug 'mhinz/vim-startify'
+  "theme
+   Plug 'travisboss/vim-janah'
+  "tpope suite
+   Plug 'tpope/vim-fugitive'
+   Plug 'tpope/vim-repeat'
+   Plug 'tpope/vim-surround'
+  "vim-polygot"
+   Plug 'sheerun/vim-polyglot'
 call plug#end()
 
 
 
-set path+=.,**
-set clipboard^=unnamedplus
-set backspace=indent,eol,start  "Make backspace behave like every other editor.
-let mapleader = ','     "The default is \, but a comma is much better.
-set showmatch           " Show matching brackets.
-set number relativenumber  " Show the line numbers on the left side.
-set formatoptions+=o    " Continue comment marker in new lines.
-set expandtab           " Insert spaces when TAB is pressed.
-set tabstop=4           " Render TABs using this many spaces.
-set shiftwidth=4        " Indentation amount for < and > commands.
-set autowriteall        " Auto write the file when switching buffers.
-set complete=.,w,b,u    " Set our desired autocompletion matching.
-set nojoinspaces        " Prevents inserting two spaces after punctuation on a join (J)
 
+"neovim defaults
+if !has('nvim')
+  set nocompatible
+  syntax on
+
+  set autoindent
+  set autoread
+  set backspace=indent,eol,start
+  set belloff=all
+  set complete-=i
+  set display=lastline
+  set formatoptions=tcqj
+  set history=10000
+  set incsearch
+  set laststatus=2
+  set ruler
+  set sessionoptions-=options
+  set showcmd
+  set sidescroll=1
+  set smarttab
+  set ttimeoutlen=50
+  set ttyfast
+  set viminfo+=!
+  set wildmenu
+endif
+
+
+
+
+
+"------------myStandards-------------"
+set autowriteall        "Auto write the file when switching buffers.
+set clipboard^=unnamedplus
+set cursorline          "Highlight line under cursor. It helps with navigation
+set expandtab           "Insert spaces when TAB is pressed.
+set formatoptions+=o    "Continue comment marker in new lines.
+set history=500         "Set how many lines of history VIM should remember
+set ignorecase          "Make searching case insensitive
+set iskeyword+=-        "Use dash as word separator
+let mapleader = ','     "The default is \, but a comma is much better.
+
+"Move between buffers with tab and shift-tab
+nnoremap  <silent>   <tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bnext<CR>
+nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
+
+"Auto center on matched string
+noremap n nzz
+noremap N Nzz
+
+set nojoinspaces        "Prevents inserting two spaces after punctuation on a join (J)
+set nomodeline          "Don't parse modelines
+set noshowmode          "do not show status in tab line
+set noswapfile          "remove swap
+set nowrap              "no wrap
+set number              "show the line numbers on the left side.
+set path+=.,**          "set path
+set relativenumber      "relative numbers!
+set showmatch           "show matching brackets.
+set shiftwidth=2        "1 tab == 2 spaces
+set smartcase           "unless the query has capital letters.
+set showtabline=2       "always show tab line
+set tabstop=2           "1 tab == 2 spaces
+set wildmode=longest,full "For autocompletion, complete as much as you can
+
+
+
+
+
+
+"-------------Colorscheme--------------"
+if (has("termguicolors"))
+    set termguicolors
+endif
+
+"colorscheme edits to make my eyes not hurt
+"augroup themeColors
+"  autocmd!
+"  autocmd ColorScheme * highlight Normal guibg=00000
+"  autocmd ColorScheme * highlight CursorLineNr guifg=fffff
+"  autocmd ColorScheme * highlight SignColumn guibg=00000
+"  autocmd ColorScheme * highlight LineNr guifg=000000 guibg=00000
+"augroup END
+
+"colorscheme
+colorscheme janah
+
+
+
+
+
+
+"-------------Split Management--------------"
 " More natural splits
 set splitbelow          " Horizontal split below current.
 set splitright          " Vertical split to right of current.
@@ -58,41 +137,13 @@ endif
 if !&sidescrolloff
    set sidescrolloff=5   " Show next 5 columns while side-scrolling.
 endif
+
 set nostartofline       " Do not jump to first character with page commands.
-" Tell Vim which characters to show for expanded TABs,
-" trailing whitespace, and end-of-lines. VERY useful!
-if &listchars ==# 'eol:$'
-  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-endif
 set list                " Show problematic characters.
+
 " Also highlight all tabs and trailing whitespace characters.
 highlight ExtraWhitespace ctermbg=white guibg=darkgreen
 match ExtraWhitespace /\s\+$\|\t/
-set ignorecase          " Make searching case insensitive
-set smartcase           " ... unless the query has capital letters.
-set gdefault            " Use 'g' flag by default with :s/foo/bar/.
-" Change from : to ;
-nnoremap ; :
-" Move between buffers with tab and shift-tab
-nnoremap  <silent>   <tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bnext<CR>
-nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
-
-
-
-
-
-
-"-------------Visuals--------------"
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-filetype plugin indent on
-syntax on
-set background=dark
-colorscheme gruvbox
-let g:gruvbox_italic = 1
-let g:gruvbox_contrast = 'medium'
-set wrap
-" do not display the current mode
-set noshowmode
 
 "Get rid of ugly split borders.
 hi vertsplit guifg=bg guibg=bg
@@ -100,29 +151,14 @@ hi vertsplit guifg=bg guibg=bg
 "Open splits
 nmap vs :vsplit<cr>
 nmap sp :split<cr>
+set splitbelow          "Make splits default to below...
+set splitright          "And to the right. This feels more natural.
 
-
-
-
-
-"-------------Search--------------"
-set hlsearch			    				   	"Highlight all matched terms.
-set incsearch				    				"Incrementally highlight, as we type.
-
-
-
-
-
-"-------------Split Management--------------"
-set splitbelow 					    			"Make splits default to below...
-set splitright						    		"And to the right. This feels more natural.
 "We'll set simpler mappings to switch between splits.
 nmap <C-J> <C-W><C-J>
 nmap <C-K> <C-W><C-K>
 nmap <C-H> <C-W><C-H>
 nmap <C-L> <C-W><C-L>
-"Auto-remoe trailing spaces.
-autocmd BufWritePre *.php :%s/\s\+$//e
 
 
 
@@ -132,20 +168,15 @@ autocmd BufWritePre *.php :%s/\s\+$//e
 "-------------Mappings--------------"
 "Make it easy to edit the Vimrc file.
 nmap <Leader>ev :e $MYVIMRC<cr>
-nmap <Leader>es :e ~/.config/nvim/snippets/
 "Fast saves.
 nmap <leader>ww :w!<cr>
 "Fast saves and quits
 nmap <leader>qq :wq!<cr>
 "Easy escaping to normal mode
 imap kj <esc>
-"Down is really the next line.
-nnoremap j gj
-nnoremap k gk
+inoremap <C-c> <esc>
 "Add simple highlight removal.
 nmap <Leader><space> :nohlsearch<cr>
-"Edit todo list for project.
-nmap ,todo :e todo.txt<cr>
 "Open terminal window
 nmap <leader>t :ter<cr>
 "Remove mapping of up down left right keys
@@ -153,16 +184,6 @@ nmap <Up> <Nop>
 nmap <Down> <Nop>
 nmap <Left> <Nop>
 nmap <Right> <Nop>
-"Some fixes for common typos have saved me a surprising amount of time
-command WQ wq
-command Wq wq
-command WA wa
-command Wa wa
-command W w
-command Q q
-command Qa qa
-command QA qa
-command Bd bd
 "Sort styles tags
 nmap <leader>sv vi{ <bar> :sort<cr>
 
@@ -172,19 +193,96 @@ nmap <leader>sv vi{ <bar> :sort<cr>
 
 "-------------Plugins--------------"
 "/
-"/ coc
+"/autoclose tags
+"/
+let g:closetag_filenames = '*.html'
+" Shortcut for closing tags, default is '>'
+let g:closetag_shortcut = '>>'
+
+
+
+
+
+
+"/
+"/blamer
+"/
+let g:blamer_enabled = 1
+let g:blamer_date_format = '%m/%d/%y'
+let g:blamer_delay = 500
+
+
+
+
+
+
+"/
+"/coc
 "/
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
-nmap <leader>f :Prettier<cr>
-let g:airline#extensions#coc#enabled = 1
+"if hidden is not set, TextEdit might fail.
+set hidden
+"Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+"You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+
 
 
 
 
 "/
-"/ typescript-vim
+"/editorconfig
 "/
-let g:typescript_indent_disable = 1
+let g:EditorConfig_exclude_patterns = ['fugitive://.\*']
+
+
+
+
+
+
+"/
+"/fzy
+"/
+nmap <C-p> :FuzzyOpen<cr>
+nmap <C-b> :FuzzyGrep<cr>
+
+
+
+
+"/
+"/lightline
+"/
+let g:lightline = {
+  \ 'colorscheme': 'wombat',
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ] ],
+  \   'right': [ [ 'percent', 'lineinfo' ],
+  \              [ 'gitbranch', 'readonly', 'modified' ] ],
+  \ },
+  \ 'component_function': {
+  \   'gitbranch': 'fugitive#head',
+  \ },
+  \ }
+
+let g:lightline#bufferline#filename_modifier = ':t'
+let g:lightline#bufferline#show_number  = 0
+let g:lightline#bufferline#shorten_path = 0
+let g:lightline#bufferline#unnamed      = '[No Name]'
+let g:lightline.tabline          = {'left': [['buffers']], 'right': [['none']]}
+let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
+let g:lightline.component_type   = {'buffers': 'tabsel'}
+
+"give transparent background to match theme
+let s:palette = g:lightline#colorscheme#{g:lightline.colorscheme}#palette
+let s:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
+let s:palette.inactive.middle = s:palette.normal.middle
+let s:palette.tabline.middle = s:palette.normal.middle
+
+
+
 
 
 
@@ -195,52 +293,26 @@ let NERDTreeHijackNetrw = 1
 nnoremap <leader>p :NERDTreeToggle<CR>
 nnoremap <silent> <leader>v :NERDTreeFind<CR>
 let g:NERDTreeWinPos = "right"
-let g:NERDTreeWinSize = 25
+let g:NERDTreeWinSize = 35
 let NERDTreeQuitOnOpen = 1
 let NERDTreeAutoDeleteBuffer = 1
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrowExpandable = "\u00a0"
 let NERDTreeDirArrowCollapsible = "\u00a0"
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "✹",
-    \ "Staged"    : "✚",
-    \ "Untracked" : "✭",
-    \ "Renamed"   : "➜",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "✖",
-    \ "Dirty"     : "✗",
-    \ "Clean"     : "✔︎",
-    \ 'Ignored'   : '☒',
-    \ "Unknown"   : "?"
-    \ }
-"Use compact syntax for prettified multi-line comments
+"Use compacyntax for prettified multi-line comments
 let g:NERDCompactSexyComs = 1
 "Align line-wise comment delimiters flush left instead of following code indentation
 let g:NERDDefaultAlign = 'left'
-"Set a language to use its alternate delimiters by default
-let g:NERDAltDelims_java = 1
-"Enable trimming of trailing whitespace when uncommenting
-let g:NERDTrimTrailingWhitespace = 1
 
 
 
 
 "/
-"/vim-airline
+"/sneek
 "/
-let g:airline#extensions#tabline#enabled = 2
-let g:airline#extensions#tabline#fnamemod = ':t'
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline#extensions#tabline#right_sep = ' '
-let g:airline#extensions#tabline#right_alt_sep = '|'
-let g:airline_left_sep = ' '
-let g:airline_left_alt_sep = '|'
-let g:airline_right_sep = ' '
-let g:airline_right_alt_sep = '|'
-let g:airline_section_x = ''                         "Remove filetype
-let g:airline_section_y = ''                         "Remove unicode
-let g:airline#extensions#tabline#enabled = 1
+map f <Plug>Sneak_s
+map F <Plug>Sneak_S
+
 
 
 
@@ -249,26 +321,24 @@ let g:airline#extensions#tabline#enabled = 1
 "-------------Auto-Commands--------------"
 "Automatically source the Vimrc file on save.
 augroup autosourcing
-    autocmd!
-    autocmd BufWritePost .config/nvim/init.vim source %
+autocmd!
+autocmd BufWritePost ~/.config/nvim/init.vim source %
 augroup END
-" Automatically change the current directory
+
+"Automatically change the current directory
 autocmd BufEnter * silent! lcd %:p:h
-"Sort PHP use statements
-vmap <Leader>Su ! awk '{ print length(), $0\| "sort -n \| cut -d\\ -f2-"extends}'<cr>
-"Auto create skeleton files
-autocmd BufNewFile * silent! 0r $HOME/.config/nvim/skeletons/%:e.tpl
+
+"Auto reload if file was changed somewhere else (for autoread)
+au CursorHold * checktime
 
 
 
- "-------------Notes and other stuff----------------"
- " If I hit % inside of Vinegar I can create a new file
- " If I hit d I can create a new directory.
- " If I hit D I can delete the directory or file.
- " Emmet key is Control Z comma
- " gcc to commnet out a line
- " gcap to comment out a paragraph
- " cs"' to replace " with '
- " cs'<q> to change ' to <q></q>
- " to remove ds"
- " change a word ysiw<em>
+
+
+
+"-------------Notes and other stuff----------------"
+" cs"' to replace " with '
+" cs'<q> to change ' to <q></q>
+" to remove ds"
+" add tag around a word ysiw<em>
+" - Press 'zz' to instantly center the line where the cursor is located.
