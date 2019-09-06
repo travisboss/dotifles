@@ -7,6 +7,11 @@ export PATH=/usr/local/bin:$PATH:/usr/bin:$HOME:/usr/local/sbin:$PATH
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/ag36335/.oh-my-zsh"
 
+# Locale
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -102,14 +107,18 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias cat="bat"
 alias ls="exa -l --git"
-alias top="htop"
+alias top="vtop -t nord"
+alias htop="vtop -t nord"
+alias fzy="rg . -S | fzy"
+alias find="rg . -S | fzy"
 
-autoload -Uz compinit 
-if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
-	compinit;
-else
-	compinit -C;
-fi;
+
+#autoload -Uz compinit 
+#if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
+#  compinit;
+#else
+#  compinit -C;
+#fi;
 
 ## Check if zplug is installed
 if [[ ! -d ~/.zplug ]]; then
@@ -118,23 +127,26 @@ if [[ ! -d ~/.zplug ]]; then
 fi
 
 
+
 # Essential
 export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
 # Make sure to use double quotes to prevent shell expansion
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+zplug "zplug/zplug", hook-build:'zplug --self-manage'
+zplug "lib/*", from:oh-my-zsh
 ## zsh plugins
 zplug "zsh-users/zsh-completions", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/github", from:oh-my-zsh
+zplug "zsh-users/zsh-autosuggestions"
 ## Github plugins
-zplug "chrissicool/zsh-256color", from:github
 zplug "thetic/extract", from:github
 zplug "desyncr/auto-ls", from:github
 zplug "zsh-users/zsh-syntax-highlighting", from:github, defer:2
+zplug "hlissner/zsh-autopair", from:github, defer:2
 ## Load theme
-zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
+zplug "romkatv/powerlevel10k", use:powerlevel10k.zsh-theme
 # Install packages that have not been installed yet
 if ! zplug check --verbose; then
     printf "Install? [y/N]: "
@@ -149,6 +161,5 @@ zplug load
 
 eval "$(thefuck --alias)"
 
-. /usr/local/opt/asdf/asdf.sh
-
-. /usr/local/opt/asdf/etc/bash_completion.d/asdf.bash
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
