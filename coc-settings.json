@@ -1,19 +1,9 @@
 {
-    "suggest.echodocSupport": true,
-    "suggest.maxCompleteItemCount": 20,
-    "coc.preferences.formatOnSaveFiletypes": [
-        "javascript",
-        "typescript",
-        "json",
-        "html",
-        "css"
-    ],
-    "eslint.filetypes": ["javascript", "typescript"],
-    "diagnostic.errorSign": "💔",
-    "diagnostic.warningSign": "💡",
-    "diagnostic.infoSign": "🖕",
-    "prettier.tabWidth": 4,
-    "prettier.ignorePath": "~/.gitignore_global",
-    "prettier.eslintIntegration": true,
-    "prettier.tslintIntegration": true
+  "suggest.echodocSupport": true,
+  "suggest.maxCompleteItemCount": 10,
+  "diagnostic.errorSign": "💔",
+  "diagnostic.warningSign": "💡",
+  "diagnostic.infoSign": "ℹ️",
+  "prettier.eslintIntegration": true,
+  "prettier.tslintIntegration": true
 }
