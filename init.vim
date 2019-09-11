@@ -6,7 +6,7 @@ call plug#begin('~/.config/nvim/plugged')
    Plug 'APZelos/blamer.nvim'
    "coc.nvim
    Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
-   "dervish
+   "dirvish
    Plug 'justinmk/vim-dirvish'
    "editorconfig
    Plug 'editorconfig/editorconfig-vim'
