@@ -20,10 +20,8 @@ call plug#begin('~/.config/nvim/plugged')
    Plug 'scrooloose/nerdcommenter'
    "sneak
    Plug 'justinmk/vim-sneak'
-   "startify
-   Plug 'mhinz/vim-startify'
   "theme
-   Plug 'travisboss/vim-janah'
+   Plug 'travisboss/vim-janah-dark'
   "tpope suite
    Plug 'tpope/vim-fugitive'
    Plug 'tpope/vim-repeat'
@@ -31,6 +29,8 @@ call plug#begin('~/.config/nvim/plugged')
   "vim-polygot"
    Plug 'sheerun/vim-polyglot'
 call plug#end()
+
+
 
 
 
@@ -62,30 +62,27 @@ if !has('nvim')
 endif
 
 
-
-
-
 "------------myStandards-------------"
-set autowriteall        "Auto write the file when switching buffers.
-set clipboard^=unnamedplus
-set cursorline          "Highlight line under cursor. It helps with navigation
-set expandtab           "Insert spaces when TAB is pressed.
-set formatoptions+=o    "Continue comment marker in new lines.
-set history=500         "Set how many lines of history VIM should remember
-set ignorecase          "Make searching case insensitive
-set iskeyword+=-        "Use dash as word separator
-let mapleader = ','     "The default is \, but a comma is much better.
+set autowriteall        "auto write the file when switching buffers.
+set clipboard^=unnamedplus "share system clipboard
+set cursorline          "highlight line under cursor. It helps with navigation
+set expandtab           "insert spaces when TAB is pressed.
+set formatoptions+=o    "continue comment marker in new lines.
+set history=500         "set how many lines of history VIM should remember
+set ignorecase          "make searching case insensitive
+set iskeyword+=-        "use dash as word separator
+let mapleader = ','     "the default is \, but a comma is much better.
 
-"Move between buffers with tab and shift-tab
+"move between buffers with tab and shift-tab
 nnoremap  <silent>   <tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bnext<CR>
 nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
 
-"Auto center on matched string
+"auto center on matched string
 noremap n nzz
 noremap N Nzz
 
-set nojoinspaces        "Prevents inserting two spaces after punctuation on a join (J)
-set nomodeline          "Don't parse modelines
+set nojoinspaces        "prevents inserting two spaces after punctuation on a join (J)
+set nomodeline          "jon't parse modelines
 set noshowmode          "do not show status in tab line
 set noswapfile          "remove swap
 set nowrap              "no wrap
@@ -97,7 +94,7 @@ set shiftwidth=2        "1 tab == 2 spaces
 set smartcase           "unless the query has capital letters.
 set showtabline=2       "always show tab line
 set tabstop=2           "1 tab == 2 spaces
-set wildmode=longest,full "For autocompletion, complete as much as you can
+set wildmode=longest,full "for autocompletion, complete as much as you can
 
 
 
@@ -110,13 +107,13 @@ if (has("termguicolors"))
 endif
 
 "colorscheme edits to make my eyes not hurt
-"augroup themeColors
-"  autocmd!
-"  autocmd ColorScheme * highlight Normal guibg=00000
-"  autocmd ColorScheme * highlight CursorLineNr guifg=fffff
-"  autocmd ColorScheme * highlight SignColumn guibg=00000
-"  autocmd ColorScheme * highlight LineNr guifg=000000 guibg=00000
-"augroup END
+augroup themeColors
+  autocmd!
+  autocmd ColorScheme * highlight Normal guibg=00000
+  autocmd ColorScheme * highlight CursorLineNr guifg=fffff
+  autocmd ColorScheme * highlight SignColumn guibg=00000
+  autocmd ColorScheme * highlight LineNr guifg=000000 guibg=00000
+augroup END
 
 "colorscheme
 colorscheme janah
@@ -128,37 +125,44 @@ colorscheme janah
 
 "-------------Split Management--------------"
 " More natural splits
-set splitbelow          " Horizontal split below current.
-set splitright          " Vertical split to right of current.
+set splitbelow          "horizontal split below current.
+set splitright          "vertical split to right of current.
 
 if !&scrolloff
-   set scrolloff=3       " Show next 3 lines while scrolling.
+   set scrolloff=3      "show next 3 lines while scrolling.
 endif
 if !&sidescrolloff
-   set sidescrolloff=5   " Show next 5 columns while side-scrolling.
+   set sidescrolloff=5  "show next 5 columns while side-scrolling.
 endif
 
-set nostartofline       " Do not jump to first character with page commands.
-set list                " Show problematic characters.
+set nostartofline       "do not jump to first character with page commands.
+set list                "show problematic characters.
 
-" Also highlight all tabs and trailing whitespace characters.
+"also highlight all tabs and trailing whitespace characters.
 highlight ExtraWhitespace ctermbg=white guibg=darkgreen
 match ExtraWhitespace /\s\+$\|\t/
 
-"Get rid of ugly split borders.
+"get rid of ugly split borders.
 hi vertsplit guifg=bg guibg=bg
 
-"Open splits
+"open splits
 nmap vs :vsplit<cr>
 nmap sp :split<cr>
 set splitbelow          "Make splits default to below...
 set splitright          "And to the right. This feels more natural.
 
-"We'll set simpler mappings to switch between splits.
+"we'll set simpler mappings to switch between splits.
 nmap <C-J> <C-W><C-J>
 nmap <C-K> <C-W><C-K>
 nmap <C-H> <C-W><C-H>
 nmap <C-L> <C-W><C-L>
+
+"resize windows with <,>,=
+if bufwinnr(1)
+  map > <C-W>5>
+  map < <C-W>5<
+  map = <C-W>=
+endif
 
 
 
@@ -166,25 +170,25 @@ nmap <C-L> <C-W><C-L>
 
 
 "-------------Mappings--------------"
-"Make it easy to edit the Vimrc file.
+"make it easy to edit the Vimrc file.
 nmap <Leader>ev :e $MYVIMRC<cr>
-"Fast saves.
+"fast saves.
 nmap <leader>ww :w!<cr>
-"Fast saves and quits
+"fast saves and quits
 nmap <leader>qq :wq!<cr>
-"Easy escaping to normal mode
+"easy escaping to normal mode
 imap kj <esc>
 inoremap <C-c> <esc>
-"Add simple highlight removal.
+"add simple highlight removal.
 nmap <Leader><space> :nohlsearch<cr>
-"Open terminal window
+"open terminal window
 nmap <leader>t :ter<cr>
-"Remove mapping of up down left right keys
+"remove mapping of up down left right keys
 nmap <Up> <Nop>
 nmap <Down> <Nop>
 nmap <Left> <Nop>
 nmap <Right> <Nop>
-"Sort styles tags
+"sort styles tags
 nmap <leader>sv vi{ <bar> :sort<cr>
 
 
@@ -196,7 +200,7 @@ nmap <leader>sv vi{ <bar> :sort<cr>
 "/autoclose tags
 "/
 let g:closetag_filenames = '*.html'
-" Shortcut for closing tags, default is '>'
+"shortcut for closing tags, default is '>'
 let g:closetag_shortcut = '>>'
 
 
@@ -222,10 +226,10 @@ let g:blamer_delay = 500
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 "if hidden is not set, TextEdit might fail.
 set hidden
-"Some servers have issues with backup files, see #649
+"some servers have issues with backup files, see #649
 set nobackup
 set nowritebackup
-"You will have bad experience for diagnostic messages when it's default 4000.
+"you will have bad experience for diagnostic messages when it's default 4000.
 set updatetime=300
 
 
@@ -236,7 +240,7 @@ set updatetime=300
 "/
 "/editorconfig
 "/
-let g:EditorConfig_exclude_patterns = ['fugitive://.\*']
+let g:EditorConfig_exclude_patterns = ['fugitive://.\*', 'scp://.\*']
 
 
 
@@ -252,11 +256,13 @@ nmap <C-b> :FuzzyGrep<cr>
 
 
 
+
+
 "/
 "/lightline
 "/
 let g:lightline = {
-  \ 'colorscheme': 'wombat',
+  \ 'colorscheme': 'seoul256',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ] ],
   \   'right': [ [ 'percent', 'lineinfo' ],
@@ -287,7 +293,7 @@ let s:palette.tabline.middle = s:palette.normal.middle
 
 
 "/
-"/ nerdtree
+"/nerdtree
 "/
 let NERDTreeHijackNetrw = 1
 nnoremap <leader>p :NERDTreeToggle<CR>
@@ -299,9 +305,9 @@ let NERDTreeAutoDeleteBuffer = 1
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrowExpandable = "\u00a0"
 let NERDTreeDirArrowCollapsible = "\u00a0"
-"Use compacyntax for prettified multi-line comments
+"use compacyntax for prettified multi-line comments
 let g:NERDCompactSexyComs = 1
-"Align line-wise comment delimiters flush left instead of following code indentation
+"align line-wise comment delimiters flush left instead of following code indentation
 let g:NERDDefaultAlign = 'left'
 
 
@@ -316,29 +322,69 @@ map F <Plug>Sneak_S
 
 
 
+"/
+"/startify
+"/
+"startify settings
+function! s:center(lines) abort
+  let longest_line   = max(map(copy(a:lines), 'strwidth(v:val)'))
+  let centered_lines = map(copy(a:lines),
+        \ 'repeat(" ", (&columns / 2) - (longest_line / 2)) . v:val')
+  return centered_lines
+endfunction
+"remove header
+let s:header= [
+    \]
+let g:startify_custom_header = s:center(s:header)
+let g:startify_change_to_dir = 1
+
+
+
+
 
 
 "-------------Auto-Commands--------------"
-"Automatically source the Vimrc file on save.
+"automatically source the Vimrc file on save.
 augroup autosourcing
 autocmd!
 autocmd BufWritePost ~/.config/nvim/init.vim source %
 augroup END
 
-"Automatically change the current directory
+"automatically change the current directory
 autocmd BufEnter * silent! lcd %:p:h
 
-"Auto reload if file was changed somewhere else (for autoread)
+"auto reload if file was changed somewhere else (for autoread)
 au CursorHold * checktime
 
+"add MRU when start vim
+function! NoFile()
+    if @% == ""
+        belowright 12new +setl\ buftype=nofile
+        set nowrap
+        set conceallevel=2
+        call matchadd('Conceal', '^\zs.*\ze\/.*\/.*\/', 10, 99, {'conceal': '…'})
+        0put =v:oldfiles
+        execute 'g/^/m0'
+        execute 'normal! G'
+        nnoremap <buffer> <CR> :call OpenMRUFile()<CR>
+    endif
+endfunction
+
+function! OpenMRUFile()
+    let l:file = getline('.')
+    bd
+    execute 'e' l:file
+endfunction
+
+autocmd VimEnter * call NoFile()
 
 
 
 
 
 "-------------Notes and other stuff----------------"
-" cs"' to replace " with '
-" cs'<q> to change ' to <q></q>
-" to remove ds"
-" add tag around a word ysiw<em>
-" - Press 'zz' to instantly center the line where the cursor is located.
+"cs"' to replace " with '
+"cs'<q> to change ' to <q></q>
+"to remove ds"
+"add tag around a word ysiw<em>
+"- Press 'zz' to instantly center the line where the cursor is located.
