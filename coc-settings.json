@@ -1,9 +1,18 @@
 {
+  "coc.preferences.formatOnSaveFiletypes": ["rust", "json", "php", "vue"],
   "suggest.echodocSupport": true,
-  "suggest.maxCompleteItemCount": 10,
-  "diagnostic.errorSign": "💔",
-  "diagnostic.warningSign": "💡",
-  "diagnostic.infoSign": "ℹ️",
+  "suggest.maxCompleteItemCount": 20,
+  "diagnostic.errorSign": "🖕",
+  "diagnostic.warningSign": "💩",
+  "diagnostic.infoSign": "🔥",
+  "prettier.ignorePath": "~/.gitignore_global",
+  "eslint.packageManager": "yarn",
+  "eslint.run": "onSave",
   "prettier.eslintIntegration": true,
-  "prettier.tslintIntegration": true
+  "prettier.jsxBracketSameLine": true,
+  "prettier.jsxSingleQuote": true,
+  "rust.show_warnings": true,
+  "vetur.format.defaultFormatter.html": "prettier",
+  "vetur.format.defaultFormatter.js": "prettier-eslint",
+  "vetur.experimental.templateInterpolationService": true
 }
