@@ -2,15 +2,10 @@
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=/usr/local/bin:$PATH:/usr/bin:$HOME:/usr/local/sbin:$PATH
+export PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/.cargo/bin:/usr/local/lib:$PATH:~/.composer/vendor/bin
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/ag36335/.oh-my-zsh"
-
-# Locale
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LANGUAGE=en_US.UTF-8
+# export ZSH="/Users/Boss/.oh-my-zsh/"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -78,24 +73,20 @@ export LANGUAGE=en_US.UTF-8
 # Add wisely, as too many plugins slow down shell startup.
 # plugins=(git)
 
-source $ZSH/oh-my-zsh.sh
+# source $ZSH/oh-my-zsh.sh
 
 # User configuration
+
+# Set default text editor
+export EDITOR=/usr/local/bin/nvim
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='nvim'
-else
-  export EDITOR='nvim'
-fi
-
 # Compilation flags
-# export ARCHFLAGS="-arch x86_64"
+export ARCHFLAGS="-arch x86_64"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -105,61 +96,54 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias seedbox="ssh root@10.0.2.236"
+alias pihole="ssh root@10.0.2.254"
+alias omv="ssh root@10.0.2.233"
+alias router="ssh root@10.0.2.253"
+alias nrouter="ssh root@10.0.0.1"
+alias npihole="ssh root@10.0.0.254"
 alias cat="bat"
-alias ls="exa -l --git"
-alias top="vtop -t nord"
-alias htop="vtop -t nord"
-alias fzy="rg . -S | fzy"
-alias find="rg . -S | fzy"
+alias ls="exa -l"
+alias find="fd | fzf"
+alias fzf="fd | fzf"
+alias msp="curl wttr.in/MSP"
+alias scl="curl wttr.in/SCL"
+alias top="vtop --theme=nord"
+alias htop="vtop --theme=nord"
 
-
-#autoload -Uz compinit 
-#if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
-#  compinit;
-#else
-#  compinit -C;
-#fi;
-
-## Check if zplug is installed
-if [[ ! -d ~/.zplug ]]; then
-  git clone https://github.com/zplug/zplug ~/.zplug
-  source ~/.zplug/init.zsh && zplug update --self
-fi
-
-
-
-# Essential
+# OSX zplug file
 export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
-# Make sure to use double quotes to prevent shell expansion
-zplug "zplug/zplug", hook-build:'zplug --self-manage'
-zplug "lib/*", from:oh-my-zsh
-## zsh plugins
-zplug "zsh-users/zsh-completions", from:oh-my-zsh
+# Have zplug self manage
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+
+# Bundles from the default repo (robbyrussell's oh-my-zsh).
+zplug "plugins/compleat", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh
-zplug "plugins/github", from:oh-my-zsh
-zplug "zsh-users/zsh-autosuggestions"
-## Github plugins
-zplug "thetic/extract", from:github
-zplug "desyncr/auto-ls", from:github
-zplug "zsh-users/zsh-syntax-highlighting", from:github, defer:2
-zplug "hlissner/zsh-autopair", from:github, defer:2
-## Load theme
+zplug "plugins/git-extras", from:oh-my-zsh
+zplug "plugins/osx", from:oh-my-zsh
+# github
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
+zplug "hschne/fzf-git", from:github
+# Load theme
 zplug "romkatv/powerlevel10k", use:powerlevel10k.zsh-theme
-# Install packages that have not been installed yet
+#zplug "dracula/zsh", as:theme
+
+# Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
     printf "Install? [y/N]: "
     if read -q; then
         echo; zplug install
-    else
-        echo
     fi
 fi
 
+# Load zplug
 zplug load
 
+# Load thefuck
 eval "$(thefuck --alias)"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+export HOMEBREW_GITHUB_API_TOKEN=0acd8327de86b7639594bfc5503c0016862226d4
