@@ -1,0 +1,21 @@
+#async
+mafredri/zsh-async
+
+#caniuse
+walesmd/caniuse.plugin.zsh
+
+#syntax-highlighting
+zdharma/fast-syntax-highlighting
+
+#thefuck with cache support
+laggardkernel/zsh-thefuck
+
+#theme
+romkatv/powerlevel10k
+
+#url highlighter
+ascii-soup/zsh-url-highlighter
+
+#zsh-users
+zsh-users/zsh-completions
+zsh-users/zsh-autosuggestions
