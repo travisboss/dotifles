@@ -1,17 +1,22 @@
-# ZSH_DISABLE_COMPFIX=true
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/.cargo/bin:/usr/local/lib:$PATH:~/.composer/vendor/bin
 
 # Path to your oh-my-zsh installation.
-# export ZSH="/Users/Boss/.oh-my-zsh/"
+export ZSH="/Users/macbookbro/.oh-my-zsh"
+export PATH="/usr/local/sbin:$PATH"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-# ZSH_THEME="dracula"
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+ZSH_THEME="robbyrussell"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -71,37 +76,44 @@ export PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/.cargo/bin:/usr/local/lib:$
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-# plugins=(git)
+plugins=(git)
 
-# source $ZSH/oh-my-zsh.sh
+source $ZSH/oh-my-zsh.sh
 
 # User configuration
-
-# Set default text editor
-export EDITOR=/usr/local/bin/nvim
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+
 # Compilation flags
-export ARCHFLAGS="-arch x86_64"
+# export ARCHFLAGS="-arch x86_64"
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
+# --files: List files that would be searched but do not search
+# --no-ignore: Do not respect .gitignore, etc...
+# --hidden: Search hidden files and folders
+# --follow: Follow symlinks
+# --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 #
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-alias seedbox="ssh root@10.0.2.236"
-alias pihole="ssh root@10.0.2.254"
-alias omv="ssh root@10.0.2.233"
-alias router="ssh root@10.0.2.253"
-alias nrouter="ssh root@10.0.0.1"
-alias npihole="ssh root@10.0.0.254"
+#alias seedbox="ssh root@10.0.2.236"
+alias pihole="mosh root@10.0.2.254"
+alias seedbox="mosh root@10.0.2.236"
+alias router="mosh root@10.0.2.253"
 alias cat="bat"
 alias ls="exa -l"
 alias find="fd | fzf"
@@ -111,39 +123,11 @@ alias scl="curl wttr.in/SCL"
 alias top="vtop --theme=nord"
 alias htop="vtop --theme=nord"
 
-# OSX zplug file
-export ZPLUG_HOME=/usr/local/opt/zplug
-source $ZPLUG_HOME/init.zsh
-
-# Have zplug self manage
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-
-# Bundles from the default repo (robbyrussell's oh-my-zsh).
-zplug "plugins/compleat", from:oh-my-zsh
-zplug "plugins/git", from:oh-my-zsh
-zplug "plugins/git-extras", from:oh-my-zsh
-zplug "plugins/osx", from:oh-my-zsh
-# github
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
-zplug "hschne/fzf-git", from:github
-# Load theme
-zplug "romkatv/powerlevel10k", use:powerlevel10k.zsh-theme
-#zplug "dracula/zsh", as:theme
-
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
-
-# Load zplug
-zplug load
-
-# Load thefuck
-eval "$(thefuck --alias)"
+#antibody
+source <(antibody init)
+antibody bundle < ~/.zsh_plugins.txt
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
-export HOMEBREW_GITHUB_API_TOKEN=0acd8327de86b7639594bfc5503c0016862226d4
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+eval $(thefuck --alias)
