@@ -1,18 +1,12 @@
 {
-  "coc.preferences.formatOnSaveFiletypes": ["rust", "json", "php", "vue"],
-  "suggest.echodocSupport": true,
-  "suggest.maxCompleteItemCount": 20,
-  "diagnostic.errorSign": "🖕",
-  "diagnostic.warningSign": "💩",
-  "diagnostic.infoSign": "🔥",
-  "prettier.ignorePath": "~/.gitignore_global",
-  "eslint.packageManager": "yarn",
-  "eslint.run": "onSave",
-  "prettier.eslintIntegration": true,
-  "prettier.jsxBracketSameLine": true,
+  "prettier.htmlWhitespaceSensitivity": "css",
+  "html.autoClosingTags": true,
+  "vetur.completion.autoImport": true,
+  "tsserver.enableJavascript": true,
+  "tsserver.formatOnType": true,
+  "prettier.singleQuote": true,
   "prettier.jsxSingleQuote": true,
-  "rust.show_warnings": true,
-  "vetur.format.defaultFormatter.html": "prettier",
-  "vetur.format.defaultFormatter.js": "prettier-eslint",
-  "vetur.experimental.templateInterpolationService": true
+  "eslint.packageManager": "yarn",
+  "prettier.eslintIntegration": true,
+  "prettier.tslintIntegration": true
 }
