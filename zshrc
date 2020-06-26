@@ -10,7 +10,7 @@ fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/macbookbro/.oh-my-zsh"
-export PATH="/usr/local/sbin:$PATH"
+export PATH="/usr/local/sbin:/vendor/bin:$PATH"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -113,7 +113,7 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.g
 #alias seedbox="ssh root@10.0.2.236"
 alias pihole="mosh root@10.0.2.254"
 alias seedbox="mosh root@10.0.2.236"
-alias router="mosh root@10.0.2.253"
+alias router="ssh root@10.0.2.253"
 alias cat="bat"
 alias ls="exa -l"
 alias find="fd | fzf"
