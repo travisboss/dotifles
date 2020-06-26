@@ -2,23 +2,24 @@
 call plug#begin('~/.config/nvim/plugged')
    "coc
    Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
+   "fzf
+   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+   Plug 'junegunn/fzf.vim'
    "lightline
    Plug 'itchyny/lightline.vim'
    Plug 'mengelbrecht/lightline-bufferline'
-   "nerdtree
-   Plug 'scrooloose/nerdcommenter'
-   "sneak
+   "dirvish
    Plug 'justinmk/vim-dirvish'
-   Plug 'justinmk/vim-sneak'
    "theme
-   Plug 'travisboss/vim-janah-dark'
-   Plug 'haishanh/night-owl.vim'
+   Plug 'dracula/vim', { 'as': 'dracula' }
    "tpope suite
+   Plug 'tpope/vim-commentary'
    Plug 'tpope/vim-surround'
    Plug 'tpope/vim-repeat'
    Plug 'tpope/vim-vinegar'
    "vim-polyglot
    Plug 'sheerun/vim-polyglot'
+   Plug 'lumiliet/vim-twig'
    "startify
    Plug 'mhinz/vim-startify'
 call plug#end()
@@ -103,16 +104,18 @@ endif
 
 "colorscheme edits to make my eyes not hurt
 "augroup themeColors
-"  autocmd!
-"  autocmd ColorScheme * highlight Normal guibg=00000
-"  autocmd ColorScheme * highlight CursorLineNr guifg=fffff
-"  autocmd ColorScheme * highlight SignColumn guibg=00000
-"  autocmd ColorScheme * highlight LineNr guifg=000000 guibg=00000
+  "autocmd!
+  "autocmd ColorScheme * highlight Normal guibg=00000
+  "autocmd ColorScheme * highlight CursorLineNr guifg=fffff
+  "autocmd ColorScheme * highlight SignColumn guibg=00000
+  "autocmd ColorScheme * highlight LineNr guifg=000000 guibg=00000
 "augroup END
 
 "colorscheme
-colorscheme janah
-
+colorscheme dracula
+"Nord Colorscheme
+"let g:nord_cursor_line_number_background = 1
+"let g:nord_uniform_diff_background = 1
 
 
 
@@ -184,6 +187,12 @@ nmap <Left> <Nop>
 nmap <Right> <Nop>
 "Sort styles tags
 nmap <leader>sv vi{ <bar> :sort<cr>
+" Basic par completion
+inoremap {      {}<Left>
+inoremap {<CR>  {<CR>}<Esc>O
+inoremap {{     {
+inoremap {}     {}
+
 
 
 
@@ -193,6 +202,7 @@ nmap <leader>sv vi{ <bar> :sort<cr>
 "/
 "/ coc
 "/
+let g:coc_global_extensions = ['coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
 command! -nargs=0 Prettier :call CocActionAsync('runCommand', 'prettier.formatFile')
 nmap <leader>f :Prettier<CR>
 " if hidden is not set, TextEdit might fail.
@@ -211,6 +221,23 @@ function! s:show_documentation()
     call CocActionAsync('doHover')
   endif
 endfunction
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
 
 
 
@@ -236,7 +263,7 @@ let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+'
 "/
 let g:lightline#bufferline#filename_modifier = ':t'
 let g:lightline = {
-      \ 'colorscheme': 'jellybeans',
+      \ 'colorscheme': 'dracula',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'cocstatus', 'currentfunction' ] ],
@@ -263,16 +290,35 @@ let s:palette.tabline.middle = s:palette.normal.middle
 
 
 
-"sneak
-map f <Plug>Sneak_s
-map F <Plug>Sneak_S
-
-
-
-
-
 "Startify
 let g:startify_custom_header = []
+
+
+
+
+
+"/
+"/fzf
+"
+nnoremap <C-p> :FZF<CR>
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-s': 'split',
+  \ 'ctrl-v': 'vsplit'
+  \}
+" --column: Show column number
+" --line-number: Show line number
+" --no-heading: Do not show file headings in results
+" --fixed-strings: Search term as a literal string
+" --ignore-case: Case insensitive search
+" --no-ignore: Do not respect .gitignore, etc...
+" --hidden: Search hidden files and folders
+" --follow: Follow symlinks
+" --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
+" --color: Search color options
+command! -bang -nargs=* Find call fzf#vim#grep(
+      \'rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" 
+      \'.shellescape(<q-args>), 1, <bang>0)
 
 
 
@@ -290,7 +336,6 @@ augroup END
 autocmd BufEnter * silent! lcd %:p:h
 "Auto reload if file was changed somewhere else (for autoread)
 au CursorHold * checktime
-
 
 
 
