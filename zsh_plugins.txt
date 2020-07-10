@@ -1,14 +1,8 @@
 #asyn
 mafredri/zsh-async
 
-#caniuse
-walesmd/caniuse.plugin.zsh
-
 #syntax-highlighting
 zdharma/fast-syntax-highlighting
-
-#thefuck with cache support
-laggardkernel/zsh-thefuck
 
 #theme
 romkatv/powerlevel10k
