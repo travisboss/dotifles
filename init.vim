@@ -202,7 +202,7 @@ inoremap {}     {}
 "/
 "/ coc
 "/
-let g:coc_global_extensions = ['coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
+let g:coc_global_extensions = ['coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-vetur']
 command! -nargs=0 Prettier :call CocActionAsync('runCommand', 'prettier.formatFile')
 nmap <leader>f :Prettier<CR>
 " if hidden is not set, TextEdit might fail.
